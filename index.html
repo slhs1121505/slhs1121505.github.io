@@ -13,7 +13,7 @@
     .wrap{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;z-index:3;padding:36px}
     /* Liquid glass card */
     .card{position:relative;overflow:hidden;border-radius:20px;padding:40px 44px;text-align:center;max-width:860px;width:100%;backdrop-filter: blur(10px);background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.06);box-shadow: 0 12px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);}
-    .card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00) 30%, rgba(255,255,255,0.01) 60%, rgba(255,255,255,0.00));mix-blend-mode:overlay;opacity:0.9;transform:translateX(-30%);animation:sheen 6s linear infinite}
+    .card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00) 30%, rgba(255,255,255,0.01) 60%, rgba(255,255,255,0.00));mix-blend-mode:overlay;opacity:0.9;transform:translateX(-30%)}
     @keyframes sheen{from{transform:translateX(-30%)}to{transform:translateX(130%)}}
 
     .avatar{width:140px;height:140px;margin:0 auto;border-radius:999px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.06);box-shadow:0 6px 20px rgba(0,0,0,0.6)}
@@ -40,7 +40,7 @@
       </div>
       <h1 id="name">張子夫</h1>
       <div class="handles">slhs1121505 · ztf.411 · tzufu</div>
-      <p class="bio">熱衷資訊與資安：實作、CTF、筆記與分享。喜歡把系統拆解成可理解的零件，追求極簡卻有層次的視覺語彙。</p>
+      <p class="bio">讓我特選上中正，技優上北科好不好。</p>
       <div class="links" aria-label="社群連結">
         <a class="link" href="https://github.com/slhs1121505" target="_blank" rel="noopener" title="GitHub">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.27-5.23-5.66 0-1.25.45-2.27 1.19-3.07-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.99.01 1.99.13 2.92.39 2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.77.12 3.06.74.8 1.19 1.82 1.19 3.07 0 4.4-2.69 5.36-5.25 5.65.41.36.78 1.08.78 2.18 0 1.58-.01 2.86-.01 3.25 0 .31.2.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
@@ -61,24 +61,21 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>
         </a>
       </div>
-      <div class="sub">CTFTIME • 分享筆記與解題心得</div>
+      <div class="sub">我很菜</div>
     </div>
   </div>
 
   <footer></footer>
 
   <script>
-    // Bloom + blur: render bright sprites to offscreen bloom canvas, blur and composite over main
     const c = document.getElementById('bg'); const ctx = c.getContext('2d');
     let W = innerWidth, H = innerHeight, DPR = devicePixelRatio || 1;
     const bloomC = document.createElement('canvas'); const bloomCtx = bloomC.getContext('2d');
     function resize(){W = innerWidth; H = innerHeight; DPR = devicePixelRatio || 1; c.width = Math.round(W * DPR); c.height = Math.round(H * DPR); c.style.width = W + 'px'; c.style.height = H + 'px'; ctx.setTransform(DPR,0,0,DPR,0,0); bloomC.width = c.width; bloomC.height = c.height; bloomC.style.width = W + 'px'; bloomC.style.height = H + 'px'; bloomCtx.setTransform(DPR,0,0,DPR,0,0); ctx.imageSmoothingEnabled = true; bloomCtx.imageSmoothingEnabled = true;}resize();addEventListener('resize',resize);
 
-    // sprite
     const spriteSize = 48; const sp = document.createElement('canvas'); sp.width = spriteSize; sp.height = spriteSize; const sctx = sp.getContext('2d');
     function makeSprite(){ sctx.clearRect(0,0,spriteSize,spriteSize); const cx = spriteSize/2, cy = spriteSize/2; const g = sctx.createRadialGradient(cx,cy,0,cx,cy,spriteSize/2); g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.25,'rgba(255,255,255,0.45)'); g.addColorStop(0.55,'rgba(255,255,255,0.12)'); g.addColorStop(1,'rgba(255,255,255,0)'); sctx.fillStyle = g; sctx.fillRect(0,0,spriteSize,spriteSize);} makeSprite();
 
-    // particles
     const layers = [{count:160,size:0.9,alpha:0.95,spd:0.9},{count:100,size:1.6,alpha:0.78,spd:1.6},{count:50,size:2.4,alpha:0.55,spd:2.6}];
     let particles = [];
     function seed(){particles=[]; const maxRad = Math.min(W,H)*0.46; for(let L=0;L<layers.length;L++){const layer=layers[L]; for(let i=0;i<layer.count;i++){const ang = Math.random()*Math.PI*2; const rad = Math.random()*maxRad; const x = W/2 + Math.cos(ang)*rad; const y = H/2 + Math.sin(ang)*rad; particles.push({x,y,vx:0,vy:0,rad,ang,size:layer.size*(0.9+Math.random()*0.25),alpha:layer.alpha,spd:layer.spd,noise:Math.random()*10,layer:L})}}}
@@ -106,16 +103,12 @@
         p.x += p.vx * 0.6; p.y += p.vy * 0.6; const ndx = p.x - cx, ndy = p.y - cy; p.rad = Math.hypot(ndx,ndy);
         if(p.x < -40) p.x = W+40; if(p.x > W+40) p.x = -40; if(p.y < -40) p.y = H+40; if(p.y > H+40) p.y = -40;
 
-        // draw main subtle sprite
         ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = Math.min(1, p.alpha * 0.08); const drawSize = p.size * 6; ctx.drawImage(sp, p.x - drawSize/2, p.y - drawSize/2, drawSize, drawSize);
-        // draw brighter sprite into bloom buffer
         bloomCtx.globalCompositeOperation = 'lighter'; bloomCtx.globalAlpha = Math.min(1, p.alpha * 0.32); bloomCtx.drawImage(sp, p.x - drawSize/2, p.y - drawSize/2, drawSize, drawSize);
       }
 
-      // apply blur to bloom buffer and composite over main (bloom + additive)
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1; ctx.filter = 'blur(14px)'; ctx.drawImage(bloomC, 0, 0, W, H); ctx.filter = 'none'; ctx.restore();
 
-      // markers (invisible) update
       for(let m of markers){ const mdx = m.x - mouse.x, mdy = m.y - mouse.y, md = Math.hypot(mdx,mdy);
         if(mouse.x>-9000 && md < 200){ const f=(1-md/200)*8; m.x += (mdx/md)*f; m.y += (mdy/md)*f; disturbance = Math.min(1, disturbance + 0.02); }
         else { m.x += (m.ox - m.x) * 0.06; m.y += (m.oy - m.y) * 0.06; const dorg = Math.hypot(m.x - m.ox, m.y - m.oy); if(dorg < 3) disturbance *= 0.88; } }
