@@ -13,8 +13,6 @@
     .wrap{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;z-index:3;padding:36px}
     /* Liquid glass card */
     .card{position:relative;overflow:hidden;border-radius:20px;padding:40px 44px;text-align:center;max-width:860px;width:100%;backdrop-filter: blur(10px);background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.06);box-shadow: 0 12px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);}
-    .card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00) 30%, rgba(255,255,255,0.01) 60%, rgba(255,255,255,0.00));mix-blend-mode:overlay;opacity:0.9;transform:translateX(-30%)}
-    @keyframes sheen{from{transform:translateX(-30%)}to{transform:translateX(130%)}}
 
     .avatar{width:140px;height:140px;margin:0 auto;border-radius:999px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.06);box-shadow:0 6px 20px rgba(0,0,0,0.6)}
     .avatar img{width:100%;height:100%;object-fit:cover;display:block}
