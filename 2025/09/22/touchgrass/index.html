@@ -31,7 +31,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>程式與心得分享 [ slhs1121505的部落格 ]</title>
+<title>[Misc] conCTF 2025 — touch-grass-3 [ slhs1121505的部落格 ]</title>
 
   <link rel="icon" href="/project/img/icon.png">
 
@@ -231,7 +231,7 @@
             
             
             
-            <a class="menu-link active" href="/"> 主頁</a>
+            <a class="menu-link " href="/"> 主頁</a>
           
             
             
@@ -277,60 +277,97 @@
       </div>
     </nav>
   </div>
-    <div class="wrapper">
-    <div class="author">
-        <div class="author-avatar-wrapper">
-          <img
-            class="author-avatar"
-            src="https://avatars.githubusercontent.com/u/98402800?v=4"
-            alt="avatar"
-            loading="lazy"
-          />
-      </div>
-      <h2 class="author-name">slhs1121505</h2>
-      <p class="author-bio">我是張子夫，可以叫我 slhs1121505、tzufu 或 ztf411！</p>
-    </div>
-    
-    <main aria-label="Content" class="glass-wrapper main-content">
-      
-
-    <h3 class="posts-item-note" aria-label="Recent Posts">Recent Posts</h3>
-    
-    
-      <article class="post-item list-hover" style="--post-index: 1;">
-        <span class="post-item-date" datetime="2025-10-22T15:39:23.588Z">10月 22, 2025</span>
-        <div class="post-item-heading">
-          <h4 class="post-item-title">
-            <a href="/project/2025/10/22/hello-world/">Hello World</a>
-          </h4>
-          
-        </div>
-      </article>
-    
-      <article class="post-item list-hover" style="--post-index: 2;">
-        <span class="post-item-date" datetime="2025-09-22T15:01:04.000Z">9月 22, 2025</span>
-        <div class="post-item-heading">
-          <h4 class="post-item-title">
-            <a href="/project/2025/09/22/touchgrass/">[Misc] conCTF 2025 — touch-grass-3</a>
-          </h4>
-          
-            <ul class="post-item-categories">
-              
-                <li><a href="/project/categories/CTF/">CTF</a></li>
-              
-            </ul>
-          
-        </div>
-      </article>
-    
-
-
-      <nav class="pagination">
-        <span class="page-number current">1</span>
-      </nav>
-      
-    </main>
+  <button id="toTopBtn"><i class="fa-solid fa-hand-point-up " ></i></button>
+<button id="toggleButton"><i class="fa-solid fa-chart-bar " ></i></button>
+<div id="overlay" class="overlay glass-wrapper overlay-bg">
+  <div class="content">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%8C%E7%9B%AE%E8%AA%AA%E6%98%8E"><span class="toc-text">題目說明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95%E4%B8%80%EF%BC%9A%E7%9C%9F%E7%9A%84%E8%B7%91"><span class="toc-text">解法一：真的跑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%81%87GPS"><span class="toc-text">解法二：假GPS</span></a></li></ol>
+    <button id="closeButton"><i class="fa-solid fa-circle-xmark"></i></button>
   </div>
+</div>
+<div class="wrapper post">
+  <head>
+    <!-- 引入 Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  </head>
+
+
+
+  <main class="page-content" aria-label="Content">
+    <div class="glass-wrapper main-content">
+      <header class="header">
+        
+          <div class="tags">
+            <a href="/project/tags/Misc/" class="tag"># Misc</a>
+          </div>
+        
+          <h1 class="header-title" itemprop="headline">[Misc] conCTF 2025 — touch-grass-3</h1>
+          <div class="post-meta">
+            最後更新: <time>10月 23, 2025</time>
+            作者: <span itemprop="author">
+              <span itemprop="name">slhs1121505</span>
+            </span>
+            字數: <span class="post-count">238</span>
+            預計閱讀時間: <span class="post-count">1min</span> 
+          </div>       
+      </header>
+          <div class="page-content"><p><img src="https://hackmd.io/_uploads/ryxgmecM9ee.png" alt="image"></p>
+<h2 id="題目說明"><a href="#題目說明" class="headerlink" title="題目說明"></a>題目說明</h2><p>題目要求：</p>
+<ul>
+<li><strong>開啟 GPS</strong></li>
+<li><strong>十分鐘內跑 1 英里</strong>（&#x3D; 1.609344 公里）</li>
+<li>有一個 <strong>Steps</strong> 計數，如果距離達標但 Steps 不夠，會要求重新跑。</li>
+</ul>
+<blockquote>
+<p>我看到有人在大雨中跑了七公里才成功，哈哈。</p>
+</blockquote>
+<hr>
+<h2 id="解法一：真的跑"><a href="#解法一：真的跑" class="headerlink" title="解法一：真的跑"></a>解法一：真的跑</h2><ul>
+<li>就跑，當千六在跑。</li>
+<li><strong>記得必須拿著手機跑</strong>，不然 Steps 會不夠。</li>
+</ul>
+<hr>
+<h2 id="解法二：假GPS"><a href="#解法二：假GPS" class="headerlink" title="解法二：假GPS"></a>解法二：假GPS</h2><p>作為駭客，我們當然不能真的跑！（不過我看 DC 群組應該只有我一個人這樣搞？）</p>
+<ol>
+<li><strong>GPS 部分</strong>  <ul>
+<li>使用假 GPS（Play 商店隨便找都有）</li>
+</ul>
+</li>
+<li><strong>Steps 部分</strong>  <ul>
+<li>題目判定需要偵測手機搖動  </li>
+<li>不能用手機模擬器，所以只能手搖！  </li>
+<li>我搖了兩千多下，呵呵。</li>
+</ul>
+</li>
+<li><strong>避免 Steps 跟不上距離</strong>  <ul>
+<li>假 GPS 速度設定為 <strong>9 分鐘內跑完 1 英里</strong>  </li>
+<li>確保 Steps 和距離都達標</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>我是在開學當天的凌晨在搖的，運動完就睡不著，不嘻嘻。</p>
+</blockquote>
+<hr>
+</div>          
+          <nav class="post-nav">
+    
+    <a class="post-nav-item post-nav-prev" href="/project/2025/10/22/hello-world/">
+      <div class="nav-arrow">&lt;&nbsp;NEWER</div>
+      <span class="post-title">Hello World</span>
+    </a>
+    
+    
+  </nav>
+          <div class="dis">
+    
+        
+
+    
+</div>
+    </div>
+   </main>
+</div>
 
   <footer class="footer">
     <small class="footer_copyright">
