@@ -2069,6 +2069,7 @@ html[data-theme=dark] .glass-wrapper:hover {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
     padding-top: 1rem;
+    justify-content: center;
 }
 
 /* 友链卡片本身 - 默认（日间）毛玻璃效果 */
