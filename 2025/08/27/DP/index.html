@@ -31,7 +31,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[CTF] conCTF 2025 — touch-grass-3 [ slhs1121505的部落格 ]</title>
+<title>[程式] 淺談動態規劃 [ slhs1121505的部落格 ]</title>
 
   <link rel="icon" href="/img/icon.png">
 
@@ -281,7 +281,7 @@
 <button id="toggleButton"><i class="fa-solid fa-chart-bar " ></i></button>
 <div id="overlay" class="overlay glass-wrapper overlay-bg">
   <div class="content">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%8C%E7%9B%AE%E8%AA%AA%E6%98%8E"><span class="toc-text">題目說明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95%E4%B8%80%EF%BC%9A%E7%9C%9F%E7%9A%84%E8%B7%91"><span class="toc-text">解法一：真的跑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%81%87GPS"><span class="toc-text">解法二：假GPS</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Q%EF%BC%9A%E4%BB%80%E9%BA%BC%E6%98%AF%E5%8B%95%E6%85%8B%E8%A6%8F%E5%8A%83%E5%91%A2%EF%BC%9F"><span class="toc-text">Q：什麼是動態規劃呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A%EF%BC%9A%E6%9C%89%E8%A8%98%E6%86%B6%E7%9A%84%E9%81%9E%E8%BF%B4%EF%BC%81"><span class="toc-text">A：有記憶的遞迴！</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E8%88%AC%E9%81%9E%E8%BF%B4-Fibonacci"><span class="toc-text">一般遞迴 Fibonacci</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8B%95%E6%85%8B%E8%A6%8F%E5%8A%83-Fibonacci"><span class="toc-text">動態規劃 Fibonacci</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E5%B9%A3-DP%EF%BC%88%E6%89%BE%E9%9B%B6%E7%9A%84%E8%A7%A3%E6%B3%95%E6%95%B8%EF%BC%89"><span class="toc-text">硬幣 DP（找零的解法數）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DP-%E5%A1%AB%E8%A1%A8%E9%81%8E%E7%A8%8B"><span class="toc-text">DP 填表過程</span></a></li></ol>
     <button id="closeButton"><i class="fa-solid fa-circle-xmark"></i></button>
   </div>
 </div>
@@ -298,69 +298,127 @@
       <header class="header">
         
           <div class="tags">
-            <a href="/tags/conCTF/" class="tag"># conCTF</a><a href="/tags/Misc/" class="tag"># Misc</a>
+            <a href="/tags/%E6%95%99%E5%AD%B8/" class="tag"># 教學</a>
           </div>
         
-          <h1 class="header-title" itemprop="headline">[CTF] conCTF 2025 — touch-grass-3</h1>
+          <h1 class="header-title" itemprop="headline">[程式] 淺談動態規劃</h1>
           <div class="post-meta">
             最後更新: <time>10月 23, 2025</time>
             作者: <span itemprop="author">
               <span itemprop="name">slhs1121505</span>
             </span>
-            字數: <span class="post-count">238</span>
+            字數: <span class="post-count">287</span>
             預計閱讀時間: <span class="post-count">1min</span> 
           </div>       
       </header>
-          <div class="page-content"><p><img src="https://hackmd.io/_uploads/ryxgmecM9ee.png" alt="image"></p>
-<h2 id="題目說明"><a href="#題目說明" class="headerlink" title="題目說明"></a>題目說明</h2><p>題目要求：</p>
-<ul>
-<li><strong>開啟 GPS</strong></li>
-<li><strong>十分鐘內跑 1 英里</strong>（&#x3D; 1.609344 公里）</li>
-<li>有一個 <strong>Steps</strong> 計數，如果距離達標但 Steps 不夠，會要求重新跑。</li>
-</ul>
+          <div class="page-content"><h3 id="Q：什麼是動態規劃呢？"><a href="#Q：什麼是動態規劃呢？" class="headerlink" title="Q：什麼是動態規劃呢？"></a>Q：什麼是動態規劃呢？</h3><h3 id="A：有記憶的遞迴！"><a href="#A：有記憶的遞迴！" class="headerlink" title="A：有記憶的遞迴！"></a>A：有記憶的遞迴！</h3><hr>
+<h2 id="一般遞迴-Fibonacci"><a href="#一般遞迴-Fibonacci" class="headerlink" title="一般遞迴 Fibonacci"></a>一般遞迴 Fibonacci</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n &lt;= <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> n</span><br><span class="line">    <span class="keyword">return</span> fib(n-<span class="number">1</span>) + fib(n-<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(fib(<span class="number">10</span>))</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>我看到有人在大雨中跑了七公里才成功，哈哈。</p>
+<p>fib(n-1) 和 fib(n-2) 會被重複計算很多次</p>
 </blockquote>
-<hr>
-<h2 id="解法一：真的跑"><a href="#解法一：真的跑" class="headerlink" title="解法一：真的跑"></a>解法一：真的跑</h2><ul>
-<li>就跑，當千六在跑。</li>
-<li><strong>記得必須拿著手機跑</strong>，不然 Steps 會不夠。</li>
-</ul>
-<hr>
-<h2 id="解法二：假GPS"><a href="#解法二：假GPS" class="headerlink" title="解法二：假GPS"></a>解法二：假GPS</h2><p>作為駭客，我們當然不能真的跑！（不過我看 DC 群組應該只有我一個人這樣搞？）</p>
-<ol>
-<li><strong>GPS 部分</strong>  <ul>
-<li>使用假 GPS（Play 商店隨便找都有）</li>
-</ul>
-</li>
-<li><strong>Steps 部分</strong>  <ul>
-<li>題目判定需要偵測手機搖動  </li>
-<li>不能用手機模擬器，所以只能手搖！  </li>
-<li>我搖了兩千多下，呵呵。</li>
-</ul>
-</li>
-<li><strong>避免 Steps 跟不上距離</strong>  <ul>
-<li>假 GPS 速度設定為 <strong>9 分鐘內跑完 1 英里</strong>  </li>
-<li>確保 Steps 和距離都達標</li>
-</ul>
-</li>
-</ol>
+<h2 id="動態規劃-Fibonacci"><a href="#動態規劃-Fibonacci" class="headerlink" title="動態規劃 Fibonacci"></a>動態規劃 Fibonacci</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">memo = &#123;&#125;</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">fib</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">if</span> n <span class="keyword">in</span> memo:</span><br><span class="line">        <span class="keyword">return</span> memo[n]</span><br><span class="line">    <span class="keyword">if</span> n &lt;= <span class="number">1</span>:</span><br><span class="line">        memo[n] = n</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        memo[n] = fib(n-<span class="number">1</span>) + fib(n-<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> memo[n]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(fib(<span class="number">10</span>))</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>我是在開學當天的凌晨在搖的，運動完就睡不著，不嘻嘻。</p>
+<p>將已計算過的結果存起來，可以大幅提高效率</p>
 </blockquote>
-<hr>
+<h2 id="硬幣-DP（找零的解法數）"><a href="#硬幣-DP（找零的解法數）" class="headerlink" title="硬幣 DP（找零的解法數）"></a>硬幣 DP（找零的解法數）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">coins = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>]</span><br><span class="line">n = <span class="number">5</span></span><br><span class="line">dp = [<span class="number">0</span>]*(n+<span class="number">1</span>)</span><br><span class="line">dp[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> c <span class="keyword">in</span> coins:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(c, n+<span class="number">1</span>):</span><br><span class="line">        dp[i] += dp[i-c]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(dp[n])</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>dp[i] 代表湊成 i 元的方法數</p>
+</blockquote>
+<h3 id="DP-填表過程"><a href="#DP-填表過程" class="headerlink" title="DP 填表過程"></a>DP 填表過程</h3><table>
+<thead>
+<tr>
+<th>i</th>
+<th>dp[i] 初始值</th>
+<th>dp[i-c]</th>
+<th>c</th>
+<th>更新後 dp[i]</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>0</td>
+<td>dp[0]&#x3D;1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0</td>
+<td>dp[1]&#x3D;1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>dp[0]&#x3D;1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0</td>
+<td>dp[2]&#x3D;2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>2</td>
+<td>dp[1]&#x3D;1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0</td>
+<td>dp[3]&#x3D;3</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3</td>
+<td>dp[2]&#x3D;2</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0</td>
+<td>dp[4]&#x3D;5</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>5</td>
+<td>dp[3]&#x3D;3</td>
+<td>2</td>
+<td>8</td>
+</tr>
+<tr>
+<td>5</td>
+<td>8</td>
+<td>dp[0]&#x3D;1</td>
+<td>5</td>
+<td>9</td>
+</tr>
+</tbody></table>
+<p>最終 dp &#x3D; [1,1,2,3,5,9]<br>所以湊成 5 元的方法共有 9 種</p>
+<p><img src="https://hackmd.io/_uploads/r1D1va82gl.png" alt="image"></p>
 </div>          
           <nav class="post-nav">
     
-    <a class="post-nav-item post-nav-prev" href="/2025/09/30/CPEmediumship/">
+    <a class="post-nav-item post-nav-prev" href="/2025/09/13/oooo/">
       <div class="nav-arrow">&lt;&nbsp;NEWER</div>
-      <span class="post-title">[程式] CPE通靈大法</span>
+      <span class="post-title">[CTF] conCTF 2025 — oooo</span>
     </a>
     
     
-    <a class="post-nav-item post-nav-next" href="/2025/09/13/oooo/">
+    <a class="post-nav-item post-nav-next" href="/2025/08/19/Tips/">
       <div class="nav-arrow">OLDER&nbsp;&gt;</div>
-      <span class="post-title">[CTF] conCTF 2025 — oooo</span>
+      <span class="post-title">[程式] 那些你不能不知道的東西</span>
     </a>
     
   </nav>

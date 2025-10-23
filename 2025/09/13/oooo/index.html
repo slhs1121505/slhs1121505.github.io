@@ -31,7 +31,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[CTF] conCTF 2025 — touch-grass-3 [ slhs1121505的部落格 ]</title>
+<title>[CTF] conCTF 2025 — oooo [ slhs1121505的部落格 ]</title>
 
   <link rel="icon" href="/img/icon.png">
 
@@ -281,7 +281,7 @@
 <button id="toggleButton"><i class="fa-solid fa-chart-bar " ></i></button>
 <div id="overlay" class="overlay glass-wrapper overlay-bg">
   <div class="content">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%8C%E7%9B%AE%E8%AA%AA%E6%98%8E"><span class="toc-text">題目說明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95%E4%B8%80%EF%BC%9A%E7%9C%9F%E7%9A%84%E8%B7%91"><span class="toc-text">解法一：真的跑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%81%87GPS"><span class="toc-text">解法二：假GPS</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#overview"><span class="toc-text">overview~~</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#quick-idea"><span class="toc-text">quick idea</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#codeee"><span class="toc-text">codeee</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#result"><span class="toc-text">result!</span></a></li></ol>
     <button id="closeButton"><i class="fa-solid fa-circle-xmark"></i></button>
   </div>
 </div>
@@ -298,69 +298,43 @@
       <header class="header">
         
           <div class="tags">
-            <a href="/tags/conCTF/" class="tag"># conCTF</a><a href="/tags/Misc/" class="tag"># Misc</a>
+            <a href="/tags/Crypto/" class="tag"># Crypto</a><a href="/tags/conCTF/" class="tag"># conCTF</a>
           </div>
         
-          <h1 class="header-title" itemprop="headline">[CTF] conCTF 2025 — touch-grass-3</h1>
+          <h1 class="header-title" itemprop="headline">[CTF] conCTF 2025 — oooo</h1>
           <div class="post-meta">
             最後更新: <time>10月 23, 2025</time>
             作者: <span itemprop="author">
               <span itemprop="name">slhs1121505</span>
             </span>
-            字數: <span class="post-count">238</span>
+            字數: <span class="post-count">312</span>
             預計閱讀時間: <span class="post-count">1min</span> 
           </div>       
       </header>
-          <div class="page-content"><p><img src="https://hackmd.io/_uploads/ryxgmecM9ee.png" alt="image"></p>
-<h2 id="題目說明"><a href="#題目說明" class="headerlink" title="題目說明"></a>題目說明</h2><p>題目要求：</p>
-<ul>
-<li><strong>開啟 GPS</strong></li>
-<li><strong>十分鐘內跑 1 英里</strong>（&#x3D; 1.609344 公里）</li>
-<li>有一個 <strong>Steps</strong> 計數，如果距離達標但 Steps 不夠，會要求重新跑。</li>
-</ul>
+          <div class="page-content"><p><img src="https://hackmd.io/_uploads/Hyv9PrHhge.png" alt="image"></p>
+<h2 id="overview"><a href="#overview" class="headerlink" title="overview~~"></a>overview~~</h2><p>The challenge gives <code>oooo.py</code>. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/bin/python3</span></span><br><span class="line"><span class="keyword">import</span> random; FLAG = <span class="built_in">open</span>(<span class="string">&quot;flag.txt&quot;</span>, <span class="string">&quot;rb&quot;</span>).read(); <span class="built_in">print</span>(<span class="string">&quot;welcome to oooo&quot;</span>)</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>: <span class="built_in">print</span>(<span class="built_in">bytes</span>(a^b <span class="keyword">for</span> a, b <span class="keyword">in</span> <span class="built_in">zip</span>(FLAG, random.sample(<span class="built_in">range</span>(<span class="number">0</span>, <span class="number">256</span>), k=<span class="built_in">len</span>(FLAG)))).<span class="built_in">hex</span>() <span class="keyword">if</span> <span class="built_in">input</span>() != <span class="string">&quot;exit&quot;</span> <span class="keyword">else</span> exit())</span><br></pre></td></tr></table></figure>
+<h2 id="quick-idea"><a href="#quick-idea" class="headerlink" title="quick idea"></a>quick idea</h2><p>The server gives <code>hex(flag XOR keystream)</code>.<br>The keystream is made with <code>random.sample(range(0, 256), k=len(FLAG))</code>, so all bytes in one response are different.</p>
+<p>We know the flag starts with <code>corctf{</code> and ends with <code>}</code>.</p>
+<p>Use the known bytes to figure out some keystream values.<br>Then, remove any candidate bytes that would repeat the same keystream value in that response.</p>
+<p>Repeat this process with many responses until each flag position has only one possible value. </p>
+<h2 id="codeee"><a href="#codeee" class="headerlink" title="codeee"></a>codeee</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> remote</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">flen=<span class="number">56</span></span><br><span class="line">pref=<span class="string">b&#x27;corctf&#123;&#x27;</span></span><br><span class="line">lim=<span class="number">1200</span></span><br><span class="line"></span><br><span class="line">conn=remote(<span class="string">&#x27;ctfi.ng&#x27;</span>,<span class="number">31556</span>)</span><br><span class="line">conn.recvline()</span><br><span class="line"></span><br><span class="line">can=[<span class="built_in">set</span>(<span class="built_in">range</span>(<span class="number">256</span>))<span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(flen)]</span><br><span class="line"><span class="keyword">for</span> i,b <span class="keyword">in</span> <span class="built_in">enumerate</span>(pref):</span><br><span class="line"> can[i]=&#123;b&#125;</span><br><span class="line">can[-<span class="number">1</span>]=&#123;<span class="built_in">ord</span>(<span class="string">&#x27;&#125;&#x27;</span>)&#125;</span><br><span class="line"></span><br><span class="line">got=<span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> got&lt;lim <span class="keyword">and</span> <span class="keyword">not</span> <span class="built_in">all</span>(<span class="built_in">len</span>(s)==<span class="number">1</span> <span class="keyword">for</span> s <span class="keyword">in</span> can):</span><br><span class="line"> conn.sendline()</span><br><span class="line"> line=conn.recvline().strip().decode(errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line"> <span class="keyword">try</span>:</span><br><span class="line">  cipher=<span class="built_in">bytes</span>.fromhex(line)</span><br><span class="line"> <span class="keyword">except</span>:</span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line"> <span class="keyword">if</span> <span class="built_in">len</span>(cipher)!=flen:</span><br><span class="line">  <span class="keyword">continue</span></span><br><span class="line"> got+=<span class="number">1</span></span><br><span class="line"> ks_list=[]</span><br><span class="line"> <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(flen):</span><br><span class="line">  <span class="keyword">if</span> <span class="built_in">len</span>(can[p])==<span class="number">1</span>:</span><br><span class="line">   ks_list.append(cipher[p]^<span class="built_in">next</span>(<span class="built_in">iter</span>(can[p])))</span><br><span class="line"> <span class="keyword">for</span> k <span class="keyword">in</span> ks_list:</span><br><span class="line">  <span class="keyword">for</span> p <span class="keyword">in</span> <span class="built_in">range</span>(flen):</span><br><span class="line">   <span class="keyword">if</span> <span class="built_in">len</span>(can[p])==<span class="number">1</span>:<span class="keyword">continue</span></span><br><span class="line">   bad=&#123;x <span class="keyword">for</span> x <span class="keyword">in</span> can[p] <span class="keyword">if</span> (cipher[p]^x)==k&#125;</span><br><span class="line">   <span class="keyword">if</span> bad:can[p]-=bad</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">all</span>(<span class="built_in">len</span>(s)==<span class="number">1</span> <span class="keyword">for</span> s <span class="keyword">in</span> can):</span><br><span class="line"> flag=<span class="built_in">bytes</span>(<span class="built_in">next</span>(<span class="built_in">iter</span>(s))<span class="keyword">for</span> s <span class="keyword">in</span> can)</span><br><span class="line"> <span class="built_in">print</span>(<span class="string">&#x27;flaggggggggggggg:&#x27;</span>,flag.decode())</span><br><span class="line"></span><br><span class="line">conn.close()</span><br></pre></td></tr></table></figure>
+<h2 id="result"><a href="#result" class="headerlink" title="result!"></a>result!</h2><p><img src="https://hackmd.io/_uploads/SJd0sSr3xl.png" alt="image"></p>
 <blockquote>
-<p>我看到有人在大雨中跑了七公里才成功，哈哈。</p>
+<p>I kinda messed up the screenshot, but whatever lol.</p>
 </blockquote>
-<hr>
-<h2 id="解法一：真的跑"><a href="#解法一：真的跑" class="headerlink" title="解法一：真的跑"></a>解法一：真的跑</h2><ul>
-<li>就跑，當千六在跑。</li>
-<li><strong>記得必須拿著手機跑</strong>，不然 Steps 會不夠。</li>
-</ul>
-<hr>
-<h2 id="解法二：假GPS"><a href="#解法二：假GPS" class="headerlink" title="解法二：假GPS"></a>解法二：假GPS</h2><p>作為駭客，我們當然不能真的跑！（不過我看 DC 群組應該只有我一個人這樣搞？）</p>
-<ol>
-<li><strong>GPS 部分</strong>  <ul>
-<li>使用假 GPS（Play 商店隨便找都有）</li>
-</ul>
-</li>
-<li><strong>Steps 部分</strong>  <ul>
-<li>題目判定需要偵測手機搖動  </li>
-<li>不能用手機模擬器，所以只能手搖！  </li>
-<li>我搖了兩千多下，呵呵。</li>
-</ul>
-</li>
-<li><strong>避免 Steps 跟不上距離</strong>  <ul>
-<li>假 GPS 速度設定為 <strong>9 分鐘內跑完 1 英里</strong>  </li>
-<li>確保 Steps 和距離都達標</li>
-</ul>
-</li>
-</ol>
-<blockquote>
-<p>我是在開學當天的凌晨在搖的，運動完就睡不著，不嘻嘻。</p>
-</blockquote>
-<hr>
 </div>          
           <nav class="post-nav">
     
-    <a class="post-nav-item post-nav-prev" href="/2025/09/30/CPEmediumship/">
+    <a class="post-nav-item post-nav-prev" href="/2025/09/22/touchgrass/">
       <div class="nav-arrow">&lt;&nbsp;NEWER</div>
-      <span class="post-title">[程式] CPE通靈大法</span>
+      <span class="post-title">[CTF] conCTF 2025 — touch-grass-3</span>
     </a>
     
     
-    <a class="post-nav-item post-nav-next" href="/2025/09/13/oooo/">
+    <a class="post-nav-item post-nav-next" href="/2025/08/27/DP/">
       <div class="nav-arrow">OLDER&nbsp;&gt;</div>
-      <span class="post-title">[CTF] conCTF 2025 — oooo</span>
+      <span class="post-title">[程式] 淺談動態規劃</span>
     </a>
     
   </nav>
