@@ -31,15 +31,13 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>關於 [ 張子夫的部落格 ]</title>
+<title>關於我 [ 張子夫的部落格 ]</title>
 
   <link rel="icon" href="/img/icon.png">
 
 
     <meta name="author" content="張子夫">
 
-
-    <meta name="subtitle" content="程式與心得分享">
 
 
     <meta name="Description" content="這是我的個人部落格，分享程式與日常心得">
@@ -271,7 +269,7 @@
             
             
             
-            <a class="menu-link active" href="/about/"> 關於</a>
+            <a class="menu-link active" href="/about/"> 關於我</a>
           
         </div>
       </div>
@@ -280,7 +278,7 @@
   
 <div class="wrapper">
   <header class="header">
-    <h1 class="header-title center">關於</h1>
+    <h1 class="header-title center">關於我</h1>
   </header>
   
     <main class="page-content" aria-label="Content">
@@ -310,6 +308,22 @@
          <div class="dis">
     
         
+    <script src='//cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js'></script>
+    <div id="waline" class="glass-wrapper waline-container"></div>
+    <script>
+        window.onload = function () {
+            new Waline({
+                el: '#waline',
+                path: location.pathname,
+                avatarCDN: 'https://sdn.geekzu.org/avatar/',
+                serverURL: 'https://waline-jdxrcb0rh-slhs1121505s-projects.vercel.app/',
+                avatar: 'monsterid',
+                lang: 'zh-TW',
+                placeholder: "封閉的文字無法成長。"
+            });
+        };
+    </script>
+
 
     
 </div>

@@ -39,8 +39,6 @@
     <meta name="author" content="張子夫">
 
 
-    <meta name="subtitle" content="程式與心得分享">
-
 
     <meta name="Description" content="這是我的個人部落格，分享程式與日常心得">
 
@@ -271,14 +269,13 @@
             
             
             
-            <a class="menu-link " href="/about/"> 關於</a>
+            <a class="menu-link " href="/about/"> 關於我</a>
           
         </div>
       </div>
     </nav>
   </div>
   <button id="toTopBtn"><i class="fa-solid fa-hand-point-up " ></i></button>
-<button id="toggleButton"><i class="fa-solid fa-chart-bar " ></i></button>
 <div id="overlay" class="overlay glass-wrapper overlay-bg">
   <div class="content">
     <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E8%A1%A8"><span class="toc-text">建表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lambda"><span class="toc-text">Lambda</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%83%E6%B0%8F%E7%AF%A9"><span class="toc-text">埃氏篩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Itertools-%E6%8E%92%E5%88%97%E7%B5%84%E5%90%88"><span class="toc-text">Itertools 排列組合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%96%E8%AB%96%E4%B9%8B%E5%BB%BA%E5%9C%96-defaultdict"><span class="toc-text">圖論之建圖(defaultdict)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%96%E8%AB%96%E4%B9%8BBFS"><span class="toc-text">圖論之BFS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%96%E8%AB%96%E4%B9%8BDFS"><span class="toc-text">圖論之DFS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DP%E4%B9%8B%E6%9C%80%E5%B0%91%E6%9C%80%E5%B0%91%E7%A1%AC%E5%B9%A3%E6%95%B8%E9%87%8F"><span class="toc-text">DP之最少最少硬幣數量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DP%E4%B9%8B%E7%A1%AC%E5%B9%A3%E7%B5%84%E5%90%88%E6%95%B8%E9%87%8F"><span class="toc-text">DP之硬幣組合數量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DP%E4%B9%8B0-1%E8%83%8C%E5%8C%85-%E6%AF%8F%E5%80%8B%E7%89%A9%E5%93%81%E4%B8%80%E6%AC%A1"><span class="toc-text">DP之0-1背包(每個物品一次)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DP%E4%B9%8B%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85-%E6%AF%8F%E5%80%8B%E7%89%A9%E5%93%81%E7%84%A1%E9%99%90%E6%AC%A1"><span class="toc-text">DP之完全背包(每個物品無限次)</span></a></li></ol>
@@ -339,6 +336,22 @@
           <div class="dis">
     
         
+    <script src='//cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js'></script>
+    <div id="waline" class="glass-wrapper waline-container"></div>
+    <script>
+        window.onload = function () {
+            new Waline({
+                el: '#waline',
+                path: location.pathname,
+                avatarCDN: 'https://sdn.geekzu.org/avatar/',
+                serverURL: 'https://waline-jdxrcb0rh-slhs1121505s-projects.vercel.app/',
+                avatar: 'monsterid',
+                lang: 'zh-TW',
+                placeholder: "封閉的文字無法成長。"
+            });
+        };
+    </script>
+
 
     
 </div>

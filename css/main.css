@@ -302,6 +302,10 @@ blockquote > :last-child {
   .wrapper.blurry {
     animation: 0.2s ease-in forwards blur;
     -webkit-animation: 0.2s ease-in forwards blur;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    position: static; 
+    z-index: auto;    
   }
 }
 
@@ -342,6 +346,32 @@ table td,
 table tr {
   padding: 2px 7px;
   text-align: center;
+}
+
+.image-preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.image-preview-modal .modal-backdrop {
+    position: absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.6);
+    z-index: -1;
+}
+
+.image-preview-modal .modal-content {
+    position: relative;
+    z-index: 1;
 }
 
 .post-item:after, .navbar:after, .wrapper:after {
@@ -1570,6 +1600,9 @@ html[data-theme=dark] .post code {
 
   #toTopBtn {
     display: none;
+    position: fixed;
+    bottom: 10vh;
+    right: 10vh;
 
   }
   #toTopBtn i{
@@ -1588,7 +1621,7 @@ html[data-theme=dark] .post code {
   position: fixed; /* 固定定位 */
   bottom: 10vh;
   right: 10vh;
-  z-index: 997;
+  z-index: 10002;
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center;     /* 垂直居中 */
@@ -1606,9 +1639,10 @@ html[data-theme=dark] .post code {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 998;
+  z-index: 10000;
   justify-content: center;
   align-items: center;
+  pointer-events: auto;
 }
 
 /* 目录内容样式 */
@@ -1618,10 +1652,11 @@ html[data-theme=dark] .post code {
   width: 100%;
   text-align: center;
   overflow-y: auto;
-  z-index: 999;
+  z-index: 10001;
   max-height: 80%;
   display: flex;
-  justify-content: center;  /* 水平居中 */
+  justify-content: center;
+  pointer-events: auto; 
 }
 
 /* 关闭按钮样式 */
@@ -1638,7 +1673,7 @@ html[data-theme=dark] .post code {
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center;     /* 垂直居中 */
-
+  z-index: 10003;
 }
 
 #closeButton:hover {
@@ -1682,7 +1717,7 @@ html[data-theme=dark] span.toc-text{
   padding: 10px; /* 内边距 */
   border: none; /* 边框样式 */
   position: fixed; /* 固定定位 */
-  bottom: 20vh;
+  bottom: 10vh;
   right: 10vh;
   z-index: 997;
   display: flex;
@@ -2065,11 +2100,21 @@ html[data-theme=dark] .glass-wrapper:hover {
 
 /* 卡片容器，使用 Grid 布局 */
 .friends-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    padding-top: 1rem;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* 核心：讓所有卡片群組置中 */
+  gap: 1.5rem;
+  padding-top: 1rem;
+}
+
+.friends-container > * {
+  flex: 0 0 280px; /* 每個卡片固定寬度 */
+}
+@keyframes glassSlideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* 友链卡片本身 - 默认（日间）毛玻璃效果 */

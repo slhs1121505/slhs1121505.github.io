@@ -39,8 +39,6 @@
     <meta name="author" content="張子夫">
 
 
-    <meta name="subtitle" content="程式與心得分享">
-
 
     <meta name="Description" content="這是我的個人部落格，分享程式與日常心得">
 
@@ -271,14 +269,13 @@
             
             
             
-            <a class="menu-link " href="/about/"> 關於</a>
+            <a class="menu-link " href="/about/"> 關於我</a>
           
         </div>
       </div>
     </nav>
   </div>
   <button id="toTopBtn"><i class="fa-solid fa-hand-point-up " ></i></button>
-<button id="toggleButton"><i class="fa-solid fa-chart-bar " ></i></button>
 <div id="overlay" class="overlay glass-wrapper overlay-bg">
   <div class="content">
     <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%A4%A9"><span class="toc-text">第一天</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%A4%A9"><span class="toc-text">第二天</span></a></li></ol>
@@ -337,6 +334,22 @@
           <div class="dis">
     
         
+    <script src='//cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js'></script>
+    <div id="waline" class="glass-wrapper waline-container"></div>
+    <script>
+        window.onload = function () {
+            new Waline({
+                el: '#waline',
+                path: location.pathname,
+                avatarCDN: 'https://sdn.geekzu.org/avatar/',
+                serverURL: 'https://waline-jdxrcb0rh-slhs1121505s-projects.vercel.app/',
+                avatar: 'monsterid',
+                lang: 'zh-TW',
+                placeholder: "封閉的文字無法成長。"
+            });
+        };
+    </script>
+
 
     
 </div>

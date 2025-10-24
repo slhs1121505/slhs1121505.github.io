@@ -39,8 +39,6 @@
     <meta name="author" content="張子夫">
 
 
-    <meta name="subtitle" content="程式與心得分享">
-
 
     <meta name="Description" content="這是我的個人部落格，分享程式與日常心得">
 
@@ -271,14 +269,13 @@
             
             
             
-            <a class="menu-link " href="/about/"> 關於</a>
+            <a class="menu-link " href="/about/"> 關於我</a>
           
         </div>
       </div>
     </nav>
   </div>
   <button id="toTopBtn"><i class="fa-solid fa-hand-point-up " ></i></button>
-<button id="toggleButton"><i class="fa-solid fa-chart-bar " ></i></button>
 <div id="overlay" class="overlay glass-wrapper overlay-bg">
   <div class="content">
     <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Q%EF%BC%9A%E4%BB%80%E9%BA%BC%E6%98%AF%E5%8B%95%E6%85%8B%E8%A6%8F%E5%8A%83%E5%91%A2%EF%BC%9F"><span class="toc-text">Q：什麼是動態規劃呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#A%EF%BC%9A%E6%9C%89%E8%A8%98%E6%86%B6%E7%9A%84%E9%81%9E%E8%BF%B4%EF%BC%81"><span class="toc-text">A：有記憶的遞迴！</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E8%88%AC%E9%81%9E%E8%BF%B4-Fibonacci"><span class="toc-text">一般遞迴 Fibonacci</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8B%95%E6%85%8B%E8%A6%8F%E5%8A%83-Fibonacci"><span class="toc-text">動態規劃 Fibonacci</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E5%B9%A3-DP%EF%BC%88%E6%89%BE%E9%9B%B6%E7%9A%84%E8%A7%A3%E6%B3%95%E6%95%B8%EF%BC%89"><span class="toc-text">硬幣 DP（找零的解法數）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DP-%E5%A1%AB%E8%A1%A8%E9%81%8E%E7%A8%8B"><span class="toc-text">DP 填表過程</span></a></li></ol>
@@ -425,6 +422,22 @@
           <div class="dis">
     
         
+    <script src='//cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js'></script>
+    <div id="waline" class="glass-wrapper waline-container"></div>
+    <script>
+        window.onload = function () {
+            new Waline({
+                el: '#waline',
+                path: location.pathname,
+                avatarCDN: 'https://sdn.geekzu.org/avatar/',
+                serverURL: 'https://waline-jdxrcb0rh-slhs1121505s-projects.vercel.app/',
+                avatar: 'monsterid',
+                lang: 'zh-TW',
+                placeholder: "封閉的文字無法成長。"
+            });
+        };
+    </script>
+
 
     
 </div>
