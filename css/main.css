@@ -289,69 +289,103 @@ blockquote > :last-child {
 }
 
 /* ---------- 統一 content wrapper 置中設定（覆蓋舊設定） ---------- */
+/* ====== 修正：穩定的 wrapper 與 navbar 置中（替換掉原本強行 !important 的區塊） ====== */
+
+/* 變數（可根據需求調整） */
 :root {
-  --content-max-width: 890px;    /* 與你目前一致，需時可調 */
-  --content-padding: 30px;
-  --content-padding-mobile: 16px;
+  --site-max-width: 890px;
+  --site-padding: 30px;
+  --site-padding-mobile: 16px;
 }
 
-/* 建議採用 min() 以同時支持響應式與強制置中 */
+/* 內容容器：水平置中、響應式，避免使用 !important 或 transform */
 .wrapper {
   box-sizing: border-box;
-  /* 寬度以內容最大值或 100% 取最小，確保響應式 */
-  width: min(100%, var(--content-max-width));
-  max-width: var(--content-max-width);
-  padding-left: var(--content-padding);
-  padding-right: var(--content-padding);
-  /* 下面兩行為關鍵：視覺上以 viewport 中心置中 */
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  -webkit-transform: translateX(-50%);
-  margin-left: 0;   /* margin:auto 不需要了（已用 left/transform） */
-  margin-right: 0;
+  max-width: var(--site-max-width);
+  width: 100%;
+  margin: 0 auto;                 /* 水平置中（安全且不改變 flow） */
+  padding-left: var(--site-padding);
+  padding-right: var(--site-padding);
 }
 
-/* 讓常見需要與 wrapper 對齊的區塊也採同一規則（選用） */
-.navbar,
-.footer,
-.author,
-.archive-container,
-.posts-list,
-.categories-grid,
-.friends-container {
+/* Navbar：保持 full-width（以免破壞內部浮動/絕對定位），但把內部 .menu 居中為內容列 */
+.navbar {
+  width: 100%;
   box-sizing: border-box;
-  width: min(100%, var(--content-max-width));
-  max-width: var(--content-max-width);
-  padding-left: var(--content-padding);
-  padding-right: var(--content-padding);
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  -webkit-transform: translateX(-50%);
-  margin-left: 0;
-  margin-right: 0;
+  border-bottom: 1px solid #ececec;
+  background: transparent; /* 需要 full-width 背景時可以調整 */
 }
 
-/* 手機上改用較小的 padding 並移除 transform（選項：若你希望在手機保留行內 flow） */
+/* 讓 .menu（navbar 內部）成為受限內容列並置中 */
+.navbar .menu {
+  max-width: var(--site-max-width);
+  margin: 0 auto;
+  padding: 15px var(--site-padding);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 保持左側模式按鈕與右側 trigger 容器排列 */
+}
+
+/* 若 .menu 裡使用 float 的小元件（如 mode），保留原先行為 */
+.menu a#mode {
+  float: left;
+  position: relative;
+}
+
+/* 觸發區塊（menu items）維持可縮放與彈性 */
+.trigger-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-width: 0;
+}
+
+/* author：修正頭像容器，避免被外部覆寫導致跑位 */
+.author {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6.3rem; /* 保留原始間距 */
+  margin-bottom: 7.2rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.author .author-avatar-wrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: block;
+  background-color: #0d122b;
+}
+
+.author .author-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 手機優化：縮小左右 padding，並保持流式布局 */
 @media screen and (max-width: 768px) {
-  .wrapper,
-  .navbar,
-  .footer,
-  .author,
-  .archive-container,
-  .posts-list,
-  .categories-grid,
-  .friends-container {
-    padding-left: var(--content-padding-mobile);
-    padding-right: var(--content-padding-mobile);
-    /* 在 very small screens 時可取消 left/transform，回到 margin:auto（可選） */
-    left: 0;
-    transform: none;
-    -webkit-transform: none;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
+  .wrapper {
+    padding-left: var(--site-padding-mobile);
+    padding-right: var(--site-padding-mobile);
+    max-width: 100%;
+  }
+
+  .navbar .menu {
+    padding-left: var(--site-padding-mobile);
+    padding-right: var(--site-padding-mobile);
+    max-width: 100%;
+  }
+
+  .author {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
   }
 }
 
@@ -3088,100 +3122,4 @@ html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
     color: #c7bebe !important;
     opacity: 0.6;
 }
-
-/* ====== 修復：還原並強制全站 wrapper / navbar / author 正常置中（放在檔案最末） ====== */
-
-/* 變數（如需調整寬度 / padding 改這裡） */
-:root{
-  --site-max-width: 890px;
-  --site-padding: 30px;
-  --site-padding-mobile: 16px;
-}
-
-/* 還原定位（移除 transform/left 干擾），使用 margin:auto 置中 */
-body > .wrapper,
-.wrapper {
-  box-sizing: border-box !important;
-  max-width: var(--site-max-width) !important;
-  width: 100% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: var(--site-padding) !important;
-  padding-right: var(--site-padding) !important;
-  position: static !important;
-  left: auto !important;
-  transform: none !important;
-}
-
-/* 同步 navbar / footer / 其他常見容器 */
-.navbar,
-.footer,
-.author,
-.archive-container,
-.posts-list,
-.categories-grid,
-.friends-container {
-  box-sizing: border-box !important;
-  max-width: var(--site-max-width) !important;
-  width: 100% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: var(--site-padding) !important;
-  padding-right: var(--site-padding) !important;
-  position: static !important;
-  left: auto !important;
-  transform: none !important;
-}
-
-/* author 頭像確保在容器內垂直水平置中 */
-.author {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  margin-top: 6.3rem !important; /* 保留你原先間距 */
-}
-.author .author-avatar-wrapper {
-  width: 70px !important;
-  height: 70px !important;
-  overflow: hidden !important;
-  border-radius: 50% !important;
-  display: block !important;
-}
-.author .author-avatar {
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-}
-
-/* 手機樣式：縮小左右內距，維持流式布局 */
-@media screen and (max-width: 768px) {
-  body > .wrapper,
-  .wrapper,
-  .navbar,
-  .footer,
-  .author,
-  .archive-container,
-  .posts-list,
-  .categories-grid,
-  .friends-container {
-    padding-left: var(--site-padding-mobile) !important;
-    padding-right: var(--site-padding-mobile) !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-
-  /* navbar 在手機上通常是 fixed/full-width，讓內部內容仍置中 */
-  .navbar {
-    padding-left: var(--site-padding-mobile) !important;
-    padding-right: var(--site-padding-mobile) !important;
-  }
-}
-
-/* 臨時 debug（上線後可移除）：在頁面上顯示 wrapper 邊界，方便確認 */
-@media (min-width: 1px) {
-  .wrapper.debug-outline { outline: 2px dashed rgba(0,128,255,0.6) !important; }
-}
-/*Wrapper應修改這邊，因為我上面的搞壞了 呵呵*/
 /*----------------------------------以上Waline评论系统样式调整----------------------------------*/
