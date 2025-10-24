@@ -288,29 +288,70 @@ blockquote > :last-child {
   margin-top: 0;
 }
 
-.wrapper {
-  max-width: calc(890px - 30px * 2);
-  position: relative;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 30px;
-  padding-left: 30px;
+/* ---------- 統一 content wrapper 置中設定（覆蓋舊設定） ---------- */
+:root{
+  --content-max-width: 890px;   /* 整站內容寬度（你可以改成 1100px 等） */
+  --content-padding: 30px;      /* 左右內距（桌面） */
+  --content-padding-mobile: 16px; /* 手機左右內距 */
 }
+
+/* 全站通用 wrapper（水平置中） */
+.wrapper {
+  box-sizing: border-box;
+  max-width: var(--content-max-width);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--content-padding);
+  padding-right: var(--content-padding);
+}
+
+/* 讓常見需要與 wrapper 對齊的區塊也使用相同寬度與 padding */
+.navbar,
+.footer,
+.author,
+.archive-container,
+.posts-list,
+.categories-grid,
+.friends-container {
+  box-sizing: border-box;
+  max-width: var(--content-max-width);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--content-padding);
+  padding-right: var(--content-padding);
+}
+
+/* 針對 navbar 既有 padding 與高度做微調（若你想保留原有 padding 可移除） */
+.navbar {
+  padding-left: var(--content-padding);
+  padding-right: var(--content-padding);
+  max-width: var(--content-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* 移動裝置調整：縮小左右內距 */
 @media screen and (max-width: 768px) {
+  .wrapper,
+  .navbar,
+  .footer,
+  .author,
+  .archive-container,
+  .categories-grid,
+  .friends-container {
+    padding-left: var(--content-padding-mobile);
+    padding-right: var(--content-padding-mobile);
+  }
+
+  /* 若你希望手機上 wrapper 的 max-width 也有限制，可取消下面註解 */
+  /*
   .wrapper {
-    max-width: calc(720px - (30px));
-    padding-right: 20px;
-    padding-left: 20px;
-    margin-top: 50px;
+    max-width: calc(100% - (var(--content-padding-mobile) * 2));
   }
-  .wrapper.blurry {
-    animation: 0.2s ease-in forwards blur;
-    -webkit-animation: 0.2s ease-in forwards blur;
-    filter: blur(5px);
-    -webkit-filter: blur(5px);
-    position: static; 
-    z-index: auto;    
-  }
+  */
 }
 
 /* Mobile: use initial viewport height to avoid background resizing on scroll */
@@ -1078,41 +1119,38 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
 /* ---------- mobile：修正 body::before 覆蓋與 safe-area 問題 ---------- */
 /* ---------- mobile: 修正 body::before 覆蓋與平滑放大背景（避免滑動時跳動/灰條） ---------- */
 @media screen and (max-width: 768px) {
-  /* 不要鎖定 html/body 的固定 height（避免限制捲動高度） */
   html, body {
     min-height: 100%;
     overflow-x: hidden;
+    position: relative;
   }
 
-  /* fallback 背景色，避免 pseudo-element 未完全覆蓋時看到灰色 */
   body {
-    background-color: #ffffff; /* 可改成接近背景圖主色 */
+    background-color: #fff;
   }
 
-  /* body::before：fixed 並貼到底；在 mobile 放大背景並加上 transition */
   body::before {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0; /* 確保貼到底 */
+    width: 100vw; /* ✅ 用 viewport 寬 */
+    height: 100vh; /* ✅ 固定高度由 JS 控制 */
     pointer-events: none;
     z-index: -1;
+
     background:
       linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
       url('https://raw.githubusercontent.com/slhs1121505/slhs1121505/refs/heads/main/G1HuJgLaQAEJBTT.jpg');
     background-position: center center;
     background-repeat: no-repeat;
-    /* 放大一點，避免地址列顯示/隱藏時露出邊緣或造成突兀跳動 */
-    background-size: 140% auto;
-    background-attachment: scroll; /* iOS 上 fixed 可能怪異，改 scroll */
-    transition: background-size 300ms ease; /* 平滑變化 */
-    -webkit-transition: background-size 300ms ease;
-    min-height: 100vh;
-    height: 100%;
+    background-size: cover; 
+    background-attachment: scroll; 
+
+    transition: transform 0.3s ease;
   }
 }
+
 
 @media screen and (max-width: 768px) {
   .wrapper .post {

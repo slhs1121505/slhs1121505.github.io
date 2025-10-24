@@ -313,7 +313,13 @@
     </div>
   </small>
 </footer>
-
+<script>
+function fixVH() {
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+}
+window.addEventListener('resize', fixVH);
+fixVH();
+</script>
 <!-- 不蒜子統計腳本（載入成功後才顯示） -->
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script>
