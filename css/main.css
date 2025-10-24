@@ -1,6 +1,10 @@
 @charset "UTF-8";
 /*----在此处修改背景图片，可为明暗模式设置不同的背景图片----*/
 /* 图片路径，请将图片存放至主题文件夹下的source/img */
+:root {
+  --vh: 1vh;
+}
+
 body {
   color: #0d122b;
 }
@@ -17,13 +21,11 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  width: 100%;
-  height: 100%;
   z-index: -1;
-  background: 
-    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+  pointer-events: none; /* 避免攔截點擊 */
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
     url('https://raw.githubusercontent.com/slhs1121505/slhs1121505/refs/heads/main/G1HuJgLaQAEJBTT.jpg');
-    /* var(--background-img-light); */
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -287,7 +289,7 @@ blockquote > :last-child {
 }
 
 .wrapper {
-  max-width: calc(720px - 30px * 2);
+  max-width: calc(890px - 30px * 2);
   position: relative;
   margin-right: auto;
   margin-left: auto;
@@ -310,6 +312,25 @@ blockquote > :last-child {
     z-index: auto;    
   }
 }
+
+/* Mobile: use initial viewport height to avoid background resizing on scroll */
+
+@media screen and (max-width: 768px) {
+  body::before {
+    /* 使用 head 裡腳本在載入時設定的 --vh 值，避免滾動時背景尺寸跳動 */
+    height: calc(var(--vh, 1vh) * 100);
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto; /* 使用 height 來決定高度，不用 bottom:0 */
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+
 
 u {
   text-decoration-color: #d2c7c7;
@@ -1030,6 +1051,31 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
   right: 0.3rem;
 }
 
+/* 強制將文章內「單張圖片」與常見包裹情況置中（放在檔案最末以確保優先） */
+.post p:only-child > img,
+.post p:only-child > a > img,
+.post p > img:only-child,
+.post p > a > img:only-child,
+.post figure:only-child > img,
+.page-content p:only-child > img,
+.page-content p:only-child > a > img,
+.post-content p:only-child > img,
+.post-content p:only-child > a > img {
+  display: block !important;
+  margin: 0 auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* 任何情況下，若你在 Markdown 或 HTML 給圖片加 .align-center 或 .center，也強制置中 */
+.post img.align-center,
+.post img.center,
+.page-content img.align-center,
+.page-content img.center {
+  display: block !important;
+  margin: 0 auto !important;
+}
+
 @media screen and (max-width: 768px) {
   .wrapper .post {
     padding-left: 15px;
@@ -1217,6 +1263,7 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
   border-top: 1px solid #ececec;
   line-height: 1.4;
 }
+
 .post-nav .post-nav-item {
   border-bottom: 0;
   font-weight: 700;
@@ -1226,42 +1273,78 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
   text-decoration: none;
   box-sizing: border-box;
 }
+
 .post-nav .post-nav-item .post-title {
   color: #0d122b;
 }
-.post-nav .post-nav-item:hover .post-title, .post-nav .post-nav-item:focus .post-title {
+
+.post-nav .post-nav-item:hover .post-title,
+.post-nav .post-nav-item:focus .post-title {
   color: #0036c7;
   opacity: 0.9;
 }
+
 .post-nav .post-nav-item .nav-arrow {
   font-weight: 400;
   font-size: 14px;
   color: #6b7886;
   margin-bottom: 3px;
 }
-.post-nav .post-nav-item:nth-child(odd) {
+
+/* 使用 class 定位（比 nth-child 更可靠）*/
+.post-nav .post-nav-prev {
+  text-align: left;
   padding-left: 0;
   padding-right: 20px;
 }
-.post-nav .post-nav-item:nth-child(even) {
+
+.post-nav .post-nav-next {
   text-align: right;
   padding-right: 0;
   padding-left: 20px;
 }
+
+/* 手機：堆疊呈現（保留分隔線） */
 @media screen and (max-width: 768px) {
   .post-nav {
     font-size: 14px;
+    flex-direction: column;
   }
+
   .post-nav .post-nav-item {
     width: 100%;
-  }
-  .post-nav .post-nav-item:nth-child(even) {
-    border-left: 0;
     padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* 若存在下一篇（置於下方），加上頂部邊線分隔 */
+  .post-nav .post-nav-next {
     border-top: 1px solid #ececec;
+    padding-top: 10px;
   }
 }
+@media screen and (max-width: 768px) {
+  .post-nav .post-nav-item:only-child {
+    width: 100%;
+    display: block;
+    margin: 0; /* 取消 auto margin */
+  }
+}
+/* 若只有一個連結，改為自適應寬度（不佔滿整列） */
+.post-nav .post-nav-item:only-child {
+  width: auto;
+  display: inline-block; /* shrink-to-fit，讓寬度跟內容一致 */
+}
 
+/* 若只有下一篇（唯一元素為 .post-nav-next），推到右邊 */
+.post-nav .post-nav-next:only-child {
+  margin-left: auto;
+}
+
+/* 若只有上一篇（唯一元素為 .post-nav-prev），推到左邊（通常不必，但保險）*/
+.post-nav .post-nav-prev:only-child {
+  margin-right: auto;
+}
 /* -----------------------------tag 页面的毛玻璃效果------------------------- */
 .tags-container a {
     /* 基础样式 */
