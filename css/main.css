@@ -3640,3 +3640,44 @@ html, body, .menu input[type=checkbox]:checked ~ .trigger, .menu .trigger .menu-
   }
 }
 /* ====== end MOBILE ONLY menu override ====== */
+/* ====== 臨時修正：移除奇怪底部空白 & 強制頁面一致滾動（mobile only） ====== */
+@media (max-width: 768px) {
+  /* 保證 body / html 高度由內容決定，去掉不必要的大底部空白 */
+  html, body {
+    min-height: 100vh !important;
+    height: auto !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+
+  /* 避免某些 wrapper/section 加了過大的 margin-bottom 或 padding-bottom */
+  .wrapper,
+  .friends-wrapper,
+  .tags-wrapper,
+  .categories-wrapper,
+  .friends-container,
+  .categories-grid,
+  .tags-container {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: visible !important; /* 確保不是內部 scroll 導致差異 */
+  }
+
+  /* 防止某些內層容器誤用 100vh 導致頁面高度加倍 */
+  [style*="height:100vh"], .fullscreen, .full-height {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* 若某些卡片容器本身有 overflow-y:auto，讓它改為 visible（避免內層滾動造成行為差異） */
+  .friends-container,
+  .categories-grid,
+  .tags-container {
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: auto !important;
+  }
+
+  /* 確保 footer 或頁面最下方元素不被隱藏或推遠 */
+  footer, .footer {
+    margin-bottom: 1.2rem !important;
+  }
+}
