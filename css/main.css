@@ -1051,29 +1051,63 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
   right: 0.3rem;
 }
 
-/* 強制將文章內「單張圖片」與常見包裹情況置中（放在檔案最末以確保優先） */
+/* ---------- 強制文章單張圖片置中（放在檔案最末以確保優先） ---------- */
 .post p:only-child > img,
 .post p:only-child > a > img,
 .post p > img:only-child,
 .post p > a > img:only-child,
 .post figure:only-child > img,
+.post figure > img,
 .page-content p:only-child > img,
-.page-content p:only-child > a > img,
-.post-content p:only-child > img,
-.post-content p:only-child > a > img {
+.post-content p:only-child > img {
   display: block !important;
   margin: 0 auto !important;
   max-width: 100% !important;
   height: auto !important;
 }
 
-/* 任何情況下，若你在 Markdown 或 HTML 給圖片加 .align-center 或 .center，也強制置中 */
+/* 支援手動加 class 的情況 */
 .post img.align-center,
 .post img.center,
 .page-content img.align-center,
 .page-content img.center {
   display: block !important;
   margin: 0 auto !important;
+}
+
+/* ---------- mobile：修正 body::before 覆蓋與 safe-area 問題 ---------- */
+@media screen and (max-width: 768px) {
+  html, body {
+    height: 100%;
+  }
+
+  /* fallback 背景色，若 pseudo-element 未完全覆蓋時避免露出灰色 */
+  body {
+    background-color: #ffffff;
+  }
+
+  /* 覆寫之前的 body::before，確保覆蓋到底並納入 safe-area */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; /* 確保貼到底 */
+    /* 使用 --vh（由 head script 計算）並加上 safe area 作備援 */
+    height: calc(var(--vh, 1vh) * 100 + env(safe-area-inset-bottom));
+    min-height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
+      url('https://raw.githubusercontent.com/slhs1121505/slhs1121505/refs/heads/main/G1HuJgLaQAEJBTT.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* 某些 iOS 上 fixed/background-attachment:fixed 會有問題，改為 scroll */
+    background-attachment: scroll;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -1255,35 +1289,44 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
 }
 
 
+/* 改良版 post-nav 規則：確保左右對齊、統一內距、單一項目行為正確、手機堆疊可控 */
 
+/* 改良版 post-nav：統一邊距，單/雙項目呈現一致 */
+
+/* 父容器的左右 padding 決定與邊緣的空白，保證單/雙項目行為一致 */
 .post-nav {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
   margin-top: 5em;
   border-top: 1px solid #ececec;
   line-height: 1.4;
+  gap: 0;
+  padding: 0 24px; /* <-- 統一左右留白，調整此值可改變與邊緣的距離 */
 }
 
+/* 預設：兩個項目各佔 50%（桌面） */
 .post-nav .post-nav-item {
-  border-bottom: 0;
-  font-weight: 700;
-  padding-bottom: 10px;
-  width: 50%;
-  padding-top: 10px;
-  text-decoration: none;
+  display: block;           /* 讓內部文字可以靠 left/right 對齊 */
   box-sizing: border-box;
+  padding: 12px 0;          /* 上下內距；左右空間由 .post-nav padding 決定 */
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+  flex: 0 0 50%;
+  max-width: 50%;
 }
 
+/* 文字樣式與 hover */
 .post-nav .post-nav-item .post-title {
   color: #0d122b;
 }
-
 .post-nav .post-nav-item:hover .post-title,
 .post-nav .post-nav-item:focus .post-title {
   color: #0036c7;
   opacity: 0.9;
 }
-
 .post-nav .post-nav-item .nav-arrow {
   font-weight: 400;
   font-size: 14px;
@@ -1291,59 +1334,63 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
   margin-bottom: 3px;
 }
 
-/* 使用 class 定位（比 nth-child 更可靠）*/
+/* 只控制文字對齊，不在這裡加左右 padding */
 .post-nav .post-nav-prev {
   text-align: left;
-  padding-left: 0;
-  padding-right: 20px;
+  order: 1;
 }
-
 .post-nav .post-nav-next {
   text-align: right;
-  padding-right: 0;
-  padding-left: 20px;
+  order: 2;
 }
 
-/* 手機：堆疊呈現（保留分隔線） */
+/* 單一項目（:only-child）行為：
+   - 改為 shrink-to-fit，不佔滿 50%
+   - 利用 margin-left/right: auto 推到左右，並保有 container padding */
+.post-nav .post-nav-item:only-child {
+  flex: 0 0 auto;
+  max-width: none;
+  width: auto;
+  display: inline-block;
+  padding-left: 0;
+  padding-right: 0;
+}
+.post-nav .post-nav-next:only-child { margin-left: auto; }
+.post-nav .post-nav-prev:only-child { margin-right: auto; }
+
+/* 行動版：垂直堆疊 */
 @media screen and (max-width: 768px) {
   .post-nav {
-    font-size: 14px;
     flex-direction: column;
+    gap: 0;
+    font-size: 14px;
+    padding: 0 18px; /* 手機上邊距略小 */
   }
 
   .post-nav .post-nav-item {
     width: 100%;
-    padding-left: 0;
-    padding-right: 0;
+    flex: 0 0 100%;
+    padding: 12px 0;
+    box-sizing: border-box;
+    display: block;
   }
 
-  /* 若存在下一篇（置於下方），加上頂部邊線分隔 */
   .post-nav .post-nav-next {
     border-top: 1px solid #ececec;
     padding-top: 10px;
   }
-}
-@media screen and (max-width: 768px) {
+
+  /* 單一元素在手機下也佔 100%（便於點擊） */
   .post-nav .post-nav-item:only-child {
     width: 100%;
     display: block;
-    margin: 0; /* 取消 auto margin */
+    margin: 0;
   }
-}
-/* 若只有一個連結，改為自適應寬度（不佔滿整列） */
-.post-nav .post-nav-item:only-child {
-  width: auto;
-  display: inline-block; /* shrink-to-fit，讓寬度跟內容一致 */
-}
 
-/* 若只有下一篇（唯一元素為 .post-nav-next），推到右邊 */
-.post-nav .post-nav-next:only-child {
-  margin-left: auto;
-}
-
-/* 若只有上一篇（唯一元素為 .post-nav-prev），推到左邊（通常不必，但保險）*/
-.post-nav .post-nav-prev:only-child {
-  margin-right: auto;
+  /* 若要反轉順序（下一篇在上），可取消下面註解：
+  .post-nav .post-nav-prev { order: 2; }
+  .post-nav .post-nav-next { order: 1; }
+  */
 }
 /* -----------------------------tag 页面的毛玻璃效果------------------------- */
 .tags-container a {

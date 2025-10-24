@@ -62,19 +62,21 @@
   <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <!-- 設定一次性的 --vh（用來修正行動裝置滾動時地址列導致背景放大問題）
-       放在 main.css 之前，確保 CSS 可以使用 var(--vh) -->
-  <script>
-    (function() {
-      function setInitialVh() {
-        document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
-      }
-      setInitialVh();
-      window.addEventListener('orientationchange', setInitialVh, { passive: true });
-      // 若需在 resize 時也更新，可取消下一行註解（通常不建議，會在滾動時造成變動）
-      // window.addEventListener('resize', setInitialVh, { passive: true });
-    })();
-  </script>
+<script>
+(function() {
+  function setVh() {
+    const height = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
+    document.documentElement.style.setProperty('--vh', (height * 0.01) + 'px');
+  }
+  setVh();
+  window.addEventListener('orientationchange', setVh, { passive: true });
+  window.addEventListener('resize', setVh, { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', setVh);
+    window.visualViewport.addEventListener('scroll', setVh);
+  }
+})();
+</script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -263,11 +265,11 @@
                   
                     <div class="post-tags">
                       
+                        <a href="/tags/%E6%95%99%E5%AD%B8/" class="tag">#教學</a>
+                      
                         <a href="/tags/%E9%A1%8C%E8%A7%A3/" class="tag">#題解</a>
                       
                         <a href="/tags/CPE/" class="tag">#CPE</a>
-                      
-                        <a href="/tags/%E6%95%99%E5%AD%B8/" class="tag">#教學</a>
                       
                     </div>
                   
