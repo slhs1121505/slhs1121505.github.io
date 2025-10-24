@@ -3110,3 +3110,91 @@ html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
     padding: 0 6px;
   }
 }
+.menu input[type=checkbox]:checked ~ .trigger {
+  position: fixed;
+  inset: 0; /* 等同 top:0; right:0; bottom:0; left:0; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  background-color: #fff;
+  z-index: 10005;
+  padding-top: env(safe-area-inset-top);
+  overflow-y: auto;
+}
+/* ================= 修正 Tags / Categories 置中問題（放在 main.css 最後） ================= */
+
+/* 1) Tags：確保整組標籤在容器內置中、不被 wrapper 偏移 */
+.tags-page .tags-container,
+.tags-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important; /* 將標籤群置中 */
+  align-items: center !important;
+  gap: 0.6rem !important;
+  padding-left: 0 !important;   /* 避免左側 padding 導致視覺偏移 */
+  padding-right: 0 !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* 確保每個標籤項目不會換行導致不穩定高度 */
+.tags-container a,
+.tags-container .tag-item {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+/* 2) Categories：使用 grid 但在少量項目時也能置中（auto-fit + 固定最小寬度） */
+.categories-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  justify-content: center !important; /* 將整組 grid 置中（當欄位少時） */
+  gap: 1rem !important;
+  width: 100%;
+  margin: 0 auto !important;
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: 0;
+  align-items: start;
+}
+
+/* 讓每張 category card 保持合理寬度（像 friends-card 一樣） */
+.categories-grid .category-item {
+  max-width: 280px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* 行動裝置：卡片改為寬度撐滿（避免過窄） */
+@media (max-width: 768px) {
+  .tags-container { gap: 0.45rem; padding: 0 8px; }
+  .tags-container a, .tags-container .tag-item { padding: 6px 10px; }
+
+  .categories-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    padding: 0 6px;
+  }
+
+  .categories-grid .category-item {
+    max-width: none;
+    width: 100%;
+    margin: 3px 0;
+  }
+}
+
+/* 3) 若仍被父容器（.wrapper）偏移，強制讓頁面內部容器水平置中 */
+.wrapper .tags-container,
+.wrapper .categories-grid {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* 4) 如果舊的規則仍被覆寫，臨時使用 !important（只在排錯時保留） */
+/* .tags-container, .categories-grid { outline: 1px dashed rgba(255,0,0,0.12); } */
