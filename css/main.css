@@ -1076,39 +1076,42 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
 }
 
 /* ---------- mobile：修正 body::before 覆蓋與 safe-area 問題 ---------- */
+/* ---------- mobile: 修正 body::before 覆蓋與平滑放大背景（避免滑動時跳動/灰條） ---------- */
 @media screen and (max-width: 768px) {
-  /* 不要把 html/body 設為固定 height:100%（會鎖住滾動高度），故這裡不再設 height */
+  /* 不要鎖定 html/body 的固定 height（避免限制捲動高度） */
   html, body {
-    /* 讓內容高度自適應，避免被鎖死造成無法滑到底 */
     min-height: 100%;
     overflow-x: hidden;
   }
 
-  /* body 背景的 fallback color（避免 pseudo-element 有縫時顯眼） */
+  /* fallback 背景色，避免 pseudo-element 未完全覆蓋時看到灰色 */
   body {
-    background-color: #ffffff; /* 可改成與背景圖色調接近的顏色 */
+    background-color: #ffffff; /* 可改成接近背景圖主色 */
   }
 
-  /* body::before 改為固定定位且貼到底（使用 safe-area 與 --vh 作備援） */
+  /* body::before：fixed 並貼到底；在 mobile 放大背景並加上 transition */
   body::before {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0; /* 保證貼到底 */
+    bottom: 0; /* 確保貼到底 */
     pointer-events: none;
     z-index: -1;
-    /* 使用 --vh（由 head script 設定），並加上 safe area 作備援 */
+    /* 不用在 scroll 上更新 height（script 也不在 scroll 時更新） */
     min-height: calc(var(--vh, 1vh) * 100 + env(safe-area-inset-bottom, 0px));
-    height: auto; /* 不鎖定成固定 height，避免與瀏覽器工具列衝突 */
+    height: auto;
     background:
       linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
       url('https://raw.githubusercontent.com/slhs1121505/slhs1121505/refs/heads/main/G1HuJgLaQAEJBTT.jpg');
     background-position: center center;
     background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: scroll; /* 避免 iOS 在 fixed 上怪異行為 */
+    /* 放大一點，避免地址列顯示/隱藏時露出邊緣或造成突兀跳動 */
+    background-size: 115% auto; /* 可調 110%~120%，預設 115% */
+    background-attachment: scroll; /* iOS 上 fixed 可能怪異，改 scroll */
+    transition: background-size 300ms ease; /* 平滑變化 */
+    -webkit-transition: background-size 300ms ease;
   }
 }
 
@@ -1295,7 +1298,8 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
 
 /* 改良版 post-nav：統一邊距，單/雙項目呈現一致 */
 
-/* 父容器的左右 padding 決定與邊緣的空白，保證單/雙項目行為一致 */
+/* post-nav：桌面左右分欄、手機上每個項目 100%（不會縮在中間） */
+
 .post-nav {
   display: flex;
   align-items: center;
@@ -1305,14 +1309,14 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
   border-top: 1px solid #ececec;
   line-height: 1.4;
   gap: 0;
-  padding: 0 18px; /* <-- 統一左右留白，調整此值可改變與邊緣的距離 */
+  padding: 0 18px; /* 與邊緣的統一留白 */
 }
 
-/* 預設：兩個項目各佔 50%（桌面） */
+/* 桌面：兩個項目各佔 50% */
 .post-nav .post-nav-item {
-  display: block;           /* 讓內部文字可以靠 left/right 對齊 */
+  display: block;
   box-sizing: border-box;
-  padding: 12px 0;          /* 上下內距；左右空間由 .post-nav padding 決定 */
+  padding: 12px 0;
   font-weight: 700;
   text-decoration: none;
   color: inherit;
@@ -1320,15 +1324,10 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
   max-width: 50%;
 }
 
-/* 文字樣式與 hover */
-.post-nav .post-nav-item .post-title {
-  color: #0d122b;
-}
+/* 文字與 hover */
+.post-nav .post-nav-item .post-title { color: #0d122b; }
 .post-nav .post-nav-item:hover .post-title,
-.post-nav .post-nav-item:focus .post-title {
-  color: #0036c7;
-  opacity: 0.9;
-}
+.post-nav .post-nav-item:focus .post-title { color: #0036c7; opacity: 0.9; }
 .post-nav .post-nav-item .nav-arrow {
   font-weight: 400;
   font-size: 14px;
@@ -1336,19 +1335,11 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
   margin-bottom: 3px;
 }
 
-/* 只控制文字對齊，不在這裡加左右 padding */
-.post-nav .post-nav-prev {
-  text-align: left;
-  order: 1;
-}
-.post-nav .post-nav-next {
-  text-align: right;
-  order: 2;
-}
+/* 文字對齊（不在這裡加入左右 padding） */
+.post-nav .post-nav-prev { text-align: left; order: 1; }
+.post-nav .post-nav-next { text-align: right; order: 2; }
 
-/* 單一項目（:only-child）行為：
-   - 改為 shrink-to-fit，不佔滿 50%
-   - 利用 margin-left/right: auto 推到左右，並保有 container padding */
+/* 單一項目的桌面行為（shrink-to-fit 並靠左或靠右） */
 .post-nav .post-nav-item:only-child {
   flex: 0 0 auto;
   max-width: none;
@@ -1360,18 +1351,20 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
 .post-nav .post-nav-next:only-child { margin-left: auto; }
 .post-nav .post-nav-prev:only-child { margin-right: auto; }
 
-/* 行動版：垂直堆疊 */
+/* 手機：垂直堆疊，並強制每個 item 佔滿 100%（不再縮在中間） */
 @media screen and (max-width: 768px) {
   .post-nav {
     flex-direction: column;
     gap: 0;
     font-size: 14px;
-    padding: 0 16px; /* 手機上邊距略小 */
+    padding: 0 16px;
   }
 
+  /* 無論單/雙，手機上每個項目都 100% */
   .post-nav .post-nav-item {
-    width: 100%;
-    flex: 0 0 100%;
+    width: 100% !important;
+    flex: none !important;
+    max-width: none !important;
     padding: 12px 0;
     box-sizing: border-box;
     display: block;
@@ -1382,9 +1375,9 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
     padding-top: 10px;
   }
 
-  /* 單一元素在手機下也佔 100%（便於點擊） */
+  /* 單一元素在手機仍佔 100% */
   .post-nav .post-nav-item:only-child {
-    width: 100%;
+    width: 100% !important;
     display: block;
     margin: 0;
   }

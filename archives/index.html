@@ -68,12 +68,14 @@
     const height = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
     document.documentElement.style.setProperty('--vh', (height * 0.01) + 'px');
   }
+  // 初始設定
   setVh();
-  window.addEventListener('orientationchange', setVh, { passive: true });
+  // 當視窗大小改變時更新（但不要在滾動時更新，避免顯示跳動）
   window.addEventListener('resize', setVh, { passive: true });
+  window.addEventListener('orientationchange', setVh, { passive: true });
+  // visualViewport resize 有助於處理地址列隱藏/顯示，但不要在 scroll 上重算
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', setVh);
-    window.visualViewport.addEventListener('scroll', setVh);
   }
 })();
 </script>
@@ -282,11 +284,11 @@
                   
                     <div class="post-tags">
                       
-                        <a href="/tags/%E9%A1%8C%E8%A7%A3/" class="tag">#題解</a>
-                      
                         <a href="/tags/%E7%BE%8E%E9%A3%9F%E6%8E%A8%E8%96%A6/" class="tag">#美食推薦</a>
                       
                         <a href="/tags/APCS/" class="tag">#APCS</a>
+                      
+                        <a href="/tags/%E9%A1%8C%E8%A7%A3/" class="tag">#題解</a>
                       
                     </div>
                   
@@ -315,11 +317,11 @@
                   
                     <div class="post-tags">
                       
-                        <a href="/tags/CPE/" class="tag">#CPE</a>
-                      
                         <a href="/tags/%E9%A1%8C%E8%A7%A3/" class="tag">#題解</a>
                       
                         <a href="/tags/%E6%95%99%E5%AD%B8/" class="tag">#教學</a>
+                      
+                        <a href="/tags/CPE/" class="tag">#CPE</a>
                       
                     </div>
                   
