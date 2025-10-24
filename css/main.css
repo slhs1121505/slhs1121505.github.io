@@ -1099,19 +1099,18 @@ html[data-theme=dark] .post code.glass-wrapper.code-bg {
     bottom: 0; /* 確保貼到底 */
     pointer-events: none;
     z-index: -1;
-    /* 不用在 scroll 上更新 height（script 也不在 scroll 時更新） */
-    min-height: calc(var(--vh, 1vh) * 100 + env(safe-area-inset-bottom, 0px));
-    height: auto;
     background:
       linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
       url('https://raw.githubusercontent.com/slhs1121505/slhs1121505/refs/heads/main/G1HuJgLaQAEJBTT.jpg');
     background-position: center center;
     background-repeat: no-repeat;
     /* 放大一點，避免地址列顯示/隱藏時露出邊緣或造成突兀跳動 */
-    background-size: 125% auto; /* 可調 110%~120%，預設 115% */
+    background-size: 140% auto;
     background-attachment: scroll; /* iOS 上 fixed 可能怪異，改 scroll */
     transition: background-size 300ms ease; /* 平滑變化 */
     -webkit-transition: background-size 300ms ease;
+    min-height: 100vh;
+    height: 100%;
   }
 }
 
