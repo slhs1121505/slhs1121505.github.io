@@ -3049,3 +3049,64 @@ html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
 
 
 /*----------------------------------以上Waline评论系统样式调整----------------------------------*/
+
+/*壞掉請刪我*/
+/* ====== 讓 Tags 置中（與 friends 類似） ====== */
+/* 將 .tags-container 改成 flex 容器並置中顯示 */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* <-- 將標籤群置中 */
+  gap: 0.6rem;              /* 標籤間距，可調整 */
+  padding-left: 0;         /* 移除原本的左填充以避免偏移 */
+  padding-right: 0;
+  align-items: center;
+}
+
+/* 保證內部 a/tag item 呈現一致 */
+.tags-container a,
+.tags-container .tag-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;     /* 禁止標籤換行造成高度不一致 */
+  box-sizing: border-box;
+}
+
+/* 在手機上稍微縮小間距 */
+@media (max-width: 768px) {
+  .tags-container { gap: 0.45rem; padding: 0 6px; }
+  .tags-container a, .tags-container .tag-item { padding: 6px 10px; }
+}
+
+/* ====== 讓 Categories 的卡片群也像 friends 一樣置中 ====== */
+/* 使用 flex 排列並置中，每個 .category-item 固定寬度（跟 friends 類似） */
+.categories-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* <-- 將卡片群置中 */
+  gap: 1rem;               /* 卡片間距 */
+  padding: 0;              /* 可視情況保留或調整 */
+}
+
+/* 固定每張卡片的寬度（可調整到你想要的大小） */
+.category-item {
+  flex: 0 0 280px;   /* 與 friends-card 同寬 280px */
+  max-width: 280px;
+  box-sizing: border-box;
+  margin: 0;         /* 由容器 gap 控制間距 */
+}
+
+/* 手機響應：卡片改為佔滿行寬 */
+@media (max-width: 768px) {
+  .category-item {
+    flex: 0 0 calc(100% - 10px);
+    max-width: calc(100% - 10px);
+    margin: 5px;
+  }
+
+  .categories-grid {
+    gap: 8px;
+    padding: 0 6px;
+  }
+}
