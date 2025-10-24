@@ -3122,4 +3122,161 @@ html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
     color: #c7bebe !important;
     opacity: 0.6;
 }
+/* ======= 還原：穩定的 wrapper / navbar / menu / author 行為 ======= */
+
+/* 使用你原本的計算值，確保與 theme 其它地方一致 */
+.wrapper {
+  max-width: calc(890px - 30px * 2);
+  position: relative;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 30px;
+  padding-left: 30px;
+  box-sizing: border-box;
+}
+
+/* Navbar 保持 full-width，但內部 .menu 為 content column 並置中 */
+.navbar {
+  width: 100%;
+  position: relative;
+  margin-right: auto;
+  margin-left: auto;
+  border-bottom: 1px solid #ececec;
+  padding: 15px 30px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+/* 內部內容列（置中、跟 wrapper 一致的 max-width/padding） */
+.navbar .menu {
+  max-width: calc(890px - 30px * 2);
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* mode 按鈕（左側）與 trigger（右側）保留原本定位方式 */
+.menu a#mode {
+  float: left;
+  position: relative;
+  left: 0;
+  top: 0;
+  transform: none;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+/* 右側 trigger 容器維持 flex，避免換行撐開 */
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.trigger-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+/* author（頭像、名稱）回到預期的排版 */
+.author {
+  margin-top: 6.3rem;
+  margin-bottom: 7.2rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+.author .author-avatar-wrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+  overflow: hidden;
+  display: block;
+}
+.author .author-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 手機：縮小 wrapper / menu padding 並維持流式布局 */
+@media screen and (max-width: 768px) {
+  .wrapper {
+    max-width: calc(720px - 30px);
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 50px;
+  }
+
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .navbar .menu {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .menu .menu-icon {
+    display: block;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1015;
+  }
+}
+/* 固定 mode 按鈕位置（放到 main.css 最末） */
+.navbar .menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;             /* 小間距，可調 */
+  box-sizing: border-box;
+  /* 不用 space-between：改用 margin-left:auto 推右側 */
+  justify-content: flex-start;
+}
+
+/* 強制把右側選單推到右邊 */
+.navbar .menu > .trigger {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+/* Mode 按鈕固定在左側 — 去除 float，使用 flex 屬性 */
+.menu a#mode {
+  float: none !important;    /* 移除舊的 float 干擾 */
+  position: relative;
+  order: 0;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1010;
+}
+
+/* 若 .menu 中還有其他左側元素，確保它們不會把 mode 推走 */
+.menu a#mode + * {
+  /* 調整相鄰元素行為（保險） */
+  flex: 0 0 auto;
+}
+
+/* 若仍被覆蓋，可暫時提高權重（測試用，正常情況下不需要） */
+/* .menu a#mode { float: none !important; margin-right: 12px !important; } */
 /*----------------------------------以上Waline评论系统样式调整----------------------------------*/
