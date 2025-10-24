@@ -310,19 +310,44 @@
   </div>
   
   <footer class="footer">
-    <small class="footer_copyright">
-      <div id="bottom-inner">
-        © Site by 張子夫<br>
-        <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a> &
-        <a target="_blank" rel="noopener" href="https://github.com/RichardTang2003/hexo-theme-Klise-glassy">Klise-glassy</a>
-        <br>
-        始於2025.
-        
-      </div>
-    </small>
-  </footer>
-  
-  
+  <small class="footer_copyright">
+    <div id="bottom-inner">
+      © Site by 張子夫<br>
+      <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a> &
+      <a target="_blank" rel="noopener" href="https://github.com/RichardTang2003/hexo-theme-Klise-glassy">Klise-glassy</a>
+      <br>
+      <span id="busuanzi_container_site_pv" style="display:none;">
+        總瀏覽次數：<span id="busuanzi_value_site_pv"></span> 次
+      </span>
+      <br>
+      始於2025.
+      <br>
+    </div>
+  </small>
+</footer>
+
+<!-- 不蒜子統計腳本（載入成功後才顯示） -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('busuanzi_container_site_pv');
+    const val = document.getElementById('busuanzi_value_site_pv');
+
+    // 檢查不蒜子是否載入成功
+    let checkCount = 0;
+    const checkLoaded = setInterval(() => {
+      if (val.innerText) {
+        el.style.display = 'inline';
+        clearInterval(checkLoaded);
+      }
+      if (++checkCount > 20) { // 約10秒
+        clearInterval(checkLoaded);
+      }
+    }, 500);
+  });
+</script>
+
+
     
       <script src="/js/main.js"></script>
     
@@ -336,6 +361,7 @@
     hoverDelay: 50,
   };
 </script>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
