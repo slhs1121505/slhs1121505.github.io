@@ -3681,3 +3681,63 @@ html, body, .menu input[type=checkbox]:checked ~ .trigger, .menu .trigger .menu-
     margin-bottom: 1.2rem !important;
   }
 }
+/* ===== 臨時修正：消除 friends/tags/categories 手機底部空白 & 統一滾動行為 ===== */
+@media (max-width: 768px) {
+  /* 保證 body 不會因為偽元素或 100vh 內容造成額外高度 */
+  html, body {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* 以 body 為主滾動容器 */
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+
+  /* 清除常見 wrapper/page-level 的底部間距（測試用） */
+  .wrapper,
+  .friends-wrapper,
+  .tags-wrapper,
+  .categories-wrapper,
+  .friends-container,
+  .categories-grid,
+  .tags-container {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: visible !important; /* 避免內層滾動 */
+  }
+
+  /* 防止任何內層使用 100vh 導致視窗高度被「加倍」 */
+  [style*="height:100vh"],
+  .full-height,
+  .fullscreen {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  /* 如果 body::before / 偽元素被用來顯示背景，確保它是 fixed 並不影響 layout */
+  body::before {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
+    width: 100vw !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+  }
+
+  /* 強制讓這三個頁面的卡片容器不產生內部捲軸（避免與 body 捲軸行為不一致） */
+  .friends-container,
+  .categories-grid,
+  .tags-container {
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: auto !important;
+  }
+
+  /* footer 保留小間距，不要被推太遠 */
+  footer, .footer {
+    margin-bottom: 1rem !important;
+    padding-bottom: 0 !important;
+  }
+}
