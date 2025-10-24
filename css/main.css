@@ -290,22 +290,29 @@ blockquote > :last-child {
 
 /* ---------- 統一 content wrapper 置中設定（覆蓋舊設定） ---------- */
 :root {
-  --content-max-width: 890px;    /* 你目前使用的 890，需一致 */
-  --content-padding: 30px;       /* 你目前看到的 30px */
+  --content-max-width: 890px;    /* 與你目前一致，需時可調 */
+  --content-padding: 30px;
   --content-padding-mobile: 16px;
 }
 
+/* 建議採用 min() 以同時支持響應式與強制置中 */
 .wrapper {
   box-sizing: border-box;
+  /* 寬度以內容最大值或 100% 取最小，確保響應式 */
+  width: min(100%, var(--content-max-width));
   max-width: var(--content-max-width);
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;           /* ← 關鍵：水平置中 */
   padding-left: var(--content-padding);
   padding-right: var(--content-padding);
+  /* 下面兩行為關鍵：視覺上以 viewport 中心置中 */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  margin-left: 0;   /* margin:auto 不需要了（已用 left/transform） */
+  margin-right: 0;
 }
 
-/* 把 navbar / footer / 其他常見 container 同步對齊 */
+/* 讓常見需要與 wrapper 對齊的區塊也採同一規則（選用） */
 .navbar,
 .footer,
 .author,
@@ -314,15 +321,19 @@ blockquote > :last-child {
 .categories-grid,
 .friends-container {
   box-sizing: border-box;
+  width: min(100%, var(--content-max-width));
   max-width: var(--content-max-width);
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
   padding-left: var(--content-padding);
   padding-right: var(--content-padding);
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  margin-left: 0;
+  margin-right: 0;
 }
 
-/* 手機左右內距縮小 */
+/* 手機上改用較小的 padding 並移除 transform（選項：若你希望在手機保留行內 flow） */
 @media screen and (max-width: 768px) {
   .wrapper,
   .navbar,
@@ -334,6 +345,13 @@ blockquote > :last-child {
   .friends-container {
     padding-left: var(--content-padding-mobile);
     padding-right: var(--content-padding-mobile);
+    /* 在 very small screens 時可取消 left/transform，回到 margin:auto（可選） */
+    left: 0;
+    transform: none;
+    -webkit-transform: none;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
   }
 }
 
