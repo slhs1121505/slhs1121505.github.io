@@ -3309,3 +3309,228 @@ body.menu-open #closeButton {
   display: none !important;
   visibility: hidden !important;
 }
+/* ================= overlay + tags/categories fix (append to main.css 最末) ================= */
+
+/* ---- 防止橫向溢出（萬用 safeguard） ---- */
+html, body {
+  overflow-x: hidden !important;
+}
+
+/* ---- Menu 覆蓋修正：完整覆蓋視窗、根據主題切換顏色、鎖定背景滾動 ---- */
+.menu input[type=checkbox]:checked ~ .trigger {
+  position: fixed !important;
+  inset: 0 !important; /* top:0; right:0; bottom:0; left:0; */
+  height: calc(var(--vh, 1vh) * 100) !important; /* fallback */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important; /* 保持內容從上開始（若要垂直置中改成 center） */
+  align-items: stretch !important;
+  background-color: rgba(255,255,255,0.98) !important; /* light 模式預設 */
+  color: inherit !important;
+  z-index: 10050 !important; /* 蓋過其他固定元素 */
+  padding-top: env(safe-area-inset-top) !important;
+  padding-bottom: env(safe-area-inset-bottom) !important;
+  overflow-y: auto !important; /* 讓 menu 內容可獨立滾動 */
+  -webkit-overflow-scrolling: touch !important;
+  box-sizing: border-box !important;
+}
+
+/* menu 內容的連結/文字使用繼承色 */
+.menu .menu-link,
+.menu .menu-trigger,
+.menu .trigger,
+.menu a {
+  color: inherit !important;
+}
+
+/* 夜間主題下的 menu 背景 / 文字 */
+html[data-theme=dark] .menu input[type=checkbox]:checked ~ .trigger {
+  background-color: rgba(10,10,12,0.95) !important;
+  color: #eaeaea !important;
+}
+
+/* 確保 menu 裡的連結在深色/淺色下都可見 */
+html[data-theme=dark] .menu .menu-link { color: #eaeaea !important; }
+html[data-theme=light] .menu .menu-link { color: #222 !important; }
+
+/* 當 menu 開啟時，隱藏或降低會蓋住 menu 的其它固定按鈕（例如 #toggleButton / #closeButton / .overlay） */
+body.menu-open #toggleButton,
+body.menu-open #closeButton,
+body.menu-open .overlay {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* 鎖定背景滾動（加在 body.no-scroll）—— JS 會控制此類別 */
+body.no-scroll {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none !important;
+}
+
+/* 如果 menu 內有單獨的可滾動區塊，確保那個區塊可以滾動（如果 .trigger 是整區滾動則不需） */
+.menu .trigger .menu-content {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ---- 防止 menu 內的元素跑到最上方看起來被擠壓：確保內部項目有合理 padding ---- */
+.menu .trigger > * {
+  box-sizing: border-box;
+  padding: 14px 18px;
+}
+
+/* ---- Tags: 強制置中、移除偏移（覆蓋原先 inline-block 與 padding） ---- */
+.tags-container,
+.tags-page .tags-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 標籤項目顯示調整 */
+.tags-container a,
+.tags-container .tag-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+/* ---- Categories: 改成和 friends 同步的 flex 卡片排列（少量也會置中） ---- */
+.categories-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 1rem !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* category card 與 friends-card 相同寬度 */
+.categories-grid .category-item {
+  flex: 0 0 280px !important;
+  max-width: 280px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  text-align: center; /* 保持卡片內容置中 */
+}
+
+/* 手機響應：卡片撐滿行寬 */
+@media (max-width: 768px) {
+  .categories-grid {
+    gap: 8px !important;
+    padding: 0 6px !important;
+  }
+  .categories-grid .category-item {
+    flex: 0 0 calc(100% - 12px) !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 3px auto !important;
+  }
+
+  .tags-container { gap: 0.45rem !important; padding: 0 8px !important; }
+  .tags-container a, .tags-container .tag-item { padding: 6px 10px !important; }
+}
+
+/* 強制 wrapper 內部容器不被側邊 padding 推偏 */
+.wrapper .tags-container,
+.wrapper .categories-grid,
+.wrapper .friends-container {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* 如需 debug 哪個元素造成 overflow，可短期加 outline */
+/* ===== Mobile menu 置中覆蓋（貼在 main.css 最後） ===== */
+
+/* 讓整個選單 overlay 完整覆蓋視窗（保留之前的 inset/--vh 設定） */
+.menu input[type=checkbox]:checked ~ .trigger {
+  position: fixed !important;
+  inset: 0 !important;
+  height: calc(var(--vh, 1vh) * 100) !important;
+  display: flex !important;
+  align-items: center !important;     /* 垂直置中 */
+  justify-content: center !important; /* 水平置中 */
+  background-color: rgba(255,255,255,0.98) !important;
+  z-index: 10050 !important;
+  padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) 16px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important; /* 讓內部的可捲動區處理滾動 */
+}
+
+/* 深色主題下的背景/文字 */
+html[data-theme=dark] .menu input[type=checkbox]:checked ~ .trigger {
+  background-color: rgba(10,10,12,0.95) !important;
+  color: #eaeaea !important;
+}
+
+/* menu 內部實際的內容盒子（用來控制最大寬度與內部滾動） */
+.menu .trigger .menu-inner {
+  width: 100%;
+  max-width: 720px; /* 可調整為你想要的最大寬 */
+  margin: auto;     /* 在父 flex container 中置中 */
+  box-sizing: border-box;
+  border-radius: 12px;
+  /* 可視需要加毛玻璃或背景色（以下為示例，可刪） */
+  background: inherit;
+}
+
+/* 真正可滾動的區域（當內容超過視窗高度時會出現滾動） */
+.menu .trigger .menu-inner .menu-content,
+.menu .trigger .menu-inner > .menu-content {
+  max-height: calc(var(--vh, 1vh) * 100 - 48px); /* 留 48px 做上下 safe padding */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 8px;
+  box-sizing: border-box;
+}
+
+/* menu 連結樣式確保與主題文字顏色一致 */
+.menu .trigger .menu-content a,
+.menu .trigger .menu-content .menu-link {
+  color: inherit !important;
+  display: block;
+  text-align: center; /* 如果想要連結置中 */
+  padding: 12px 8px;
+  text-decoration: none;
+}
+
+/* 小螢幕微調（更窄時讓內距少一點） */
+@media (max-width: 420px) {
+  .menu input[type=checkbox]:checked ~ .trigger {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  .menu .trigger .menu-inner { max-width: 100%; }
+  .menu .trigger .menu-inner .menu-content { max-height: calc(var(--vh, 1vh) * 100 - 28px); }
+}
+
+/* 如果你同時使用 body.menu-open / body.no-scroll（JS 控制），確保 body 滾動被鎖定 */
+body.no-scroll {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 防止水平溢出造成可左右滑動 */
+html, body, .menu input[type=checkbox]:checked ~ .trigger, .menu .trigger .menu-inner {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
