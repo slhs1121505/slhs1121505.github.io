@@ -307,16 +307,16 @@
             作者: <span itemprop="author">
               <span itemprop="name">張子夫</span>
             </span>
-            字數: <span class="post-count">181</span>
+            字數: <span class="post-count">183</span>
             預計閱讀時間: <span class="post-count">1min</span> 
           </div>       
       </header>
           <div class="page-content"><h2 id="廢話一下"><a href="#廢話一下" class="headerlink" title="廢話一下"></a>廢話一下</h2><p>這應該算是我從 Hackmd 搬到自己用 Hexo 架的網站上的第一篇文。<br>前天搞的時候，由於是第一次用，<code>_config.yaml</code> 沒用好，我整個網站的 CSS 全沒了。<br>不過最後自己摸索了一下，還是成功用好了。  </p>
-<p>我覺得相較於 Hackmd 或其他網站，我認為自己架網站的自定義的地方就比較多，<br>像我就能把背景改成我婆 486。  </p>
+<p>我覺得相較於 Hackmd 或其他網站，我認為自己架網站的自定義的地方就比較多，像我就能把背景改成我婆 486。  </p>
 <hr>
 <h2 id="如何繞過-eval-檢查"><a href="#如何繞過-eval-檢查" class="headerlink" title="如何繞過 eval 檢查"></a>如何繞過 eval 檢查</h2><p>我也是寫了蠻多題才發現可以繞過。<br>我個人認為用 <code>eval</code> 又沒差，就是 Python 裡面內建的，Zerojudge 幹嘛要禁？  </p>
 <p>總之就是：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">e = <span class="built_in">eval</span></span><br><span class="line"><span class="built_in">print</span>(e(<span class="number">2</span>+<span class="number">3</span>))  <span class="comment"># 5</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">e = <span class="built_in">eval</span></span><br><span class="line"><span class="built_in">print</span>(e(<span class="string">&quot;2+3&quot;</span>))  <span class="comment"># 5</span></span><br></pre></td></tr></table></figure>
 <p>就這樣，就可以繞過了。</p>
 </div>          
           <nav class="post-nav">
