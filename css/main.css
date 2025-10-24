@@ -2804,6 +2804,11 @@ html[data-theme=dark] .waline-container .wl-card:hover {
     background: rgba(40, 40, 40, 0.4) !important;
 }
 
+html[data-theme=dark] .waline-container *,
+html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
+    color: #c7bebe !important;
+}
+
 html[data-theme=dark] .waline-container .wl-btn {
     background: rgba(40, 40, 40, 0.4) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
@@ -2834,5 +2839,56 @@ html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
 .dis {
     margin-top: 2rem;
 }
+
+/* 淺色主題 (白天) */
+html[data-theme=light] .waline-container .wl-card {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #000 !important;
+}
+
+html[data-theme=light] .waline-container .wl-btn {
+    background: rgba(255, 255, 255, 0.3) !important;
+    color: #000 !important;
+}
+
+html[data-theme=light] .waline-container .wl-editor,
+html[data-theme=light] .waline-container .wl-editor textarea {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #000 !important;
+}
+
+/* 暗色主題 (灰黑) */
+html[data-theme=dark] .waline-container .wl-card {
+    background: rgba(50, 50, 50, 0.3) !important; /* 深灰而不是純黑 */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #c7bebe !important;
+}
+
+html[data-theme=dark] .waline-container .wl-card:hover {
+    background: rgba(50, 50, 50, 0.4) !important;
+}
+
+html[data-theme=dark] .waline-container .wl-btn {
+    background: rgba(50, 50, 50, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #c7bebe !important;
+}
+
+html[data-theme=dark] .waline-container .wl-btn:hover {
+    background: rgba(50, 50, 50, 0.5) !important;
+}
+
+html[data-theme=dark] .waline-container .wl-editor,
+html[data-theme=dark] .waline-container .wl-editor textarea {
+    background: rgba(50, 50, 50, 0.2) !important;
+    color: #c7bebe !important;
+}
+
+html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
+    color: #c7bebe !important;
+    opacity: 0.6;
+}
+
 
 /*----------------------------------以上Waline评论系统样式调整----------------------------------*/
