@@ -289,24 +289,23 @@ blockquote > :last-child {
 }
 
 /* ---------- 統一 content wrapper 置中設定（覆蓋舊設定） ---------- */
-:root{
-  --content-max-width: 890px;   /* 整站內容寬度（你可以改成 1100px 等） */
-  --content-padding: 30px;      /* 左右內距（桌面） */
-  --content-padding-mobile: 16px; /* 手機左右內距 */
+:root {
+  --content-max-width: 890px;    /* 你目前使用的 890，需一致 */
+  --content-padding: 30px;       /* 你目前看到的 30px */
+  --content-padding-mobile: 16px;
 }
 
-/* 全站通用 wrapper（水平置中） */
 .wrapper {
   box-sizing: border-box;
   max-width: var(--content-max-width);
   width: 100%;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: auto;           /* ← 關鍵：水平置中 */
   padding-left: var(--content-padding);
   padding-right: var(--content-padding);
 }
 
-/* 讓常見需要與 wrapper 對齊的區塊也使用相同寬度與 padding */
+/* 把 navbar / footer / 其他常見 container 同步對齊 */
 .navbar,
 .footer,
 .author,
@@ -323,35 +322,19 @@ blockquote > :last-child {
   padding-right: var(--content-padding);
 }
 
-/* 針對 navbar 既有 padding 與高度做微調（若你想保留原有 padding 可移除） */
-.navbar {
-  padding-left: var(--content-padding);
-  padding-right: var(--content-padding);
-  max-width: var(--content-max-width);
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box;
-}
-
-/* 移動裝置調整：縮小左右內距 */
+/* 手機左右內距縮小 */
 @media screen and (max-width: 768px) {
   .wrapper,
   .navbar,
   .footer,
   .author,
   .archive-container,
+  .posts-list,
   .categories-grid,
   .friends-container {
     padding-left: var(--content-padding-mobile);
     padding-right: var(--content-padding-mobile);
   }
-
-  /* 若你希望手機上 wrapper 的 max-width 也有限制，可取消下面註解 */
-  /*
-  .wrapper {
-    max-width: calc(100% - (var(--content-padding-mobile) * 2));
-  }
-  */
 }
 
 /* Mobile: use initial viewport height to avoid background resizing on scroll */
