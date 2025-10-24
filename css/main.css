@@ -3198,3 +3198,114 @@ html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
 
 /* 4) 如果舊的規則仍被覆寫，臨時使用 !important（只在排錯時保留） */
 /* .tags-container, .categories-grid { outline: 1px dashed rgba(255,0,0,0.12); } */
+/* ===== 強制置中：Tags / Categories（放在 main.css 最後，覆蓋先前設定） ===== */
+
+/* --- Tags：使用 flex 並置中，移除左右偏移 --- */
+.tags-page .tags-container,
+.tags-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important; /* 群組置中 */
+  align-items: center !important;
+  gap: 0.6rem !important;
+  padding-left: 0 !important;   /* 防止左填充導致視覺偏移 */
+  padding-right: 0 !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 確保標籤項目行內且不被折行破壞高度 */
+.tags-container a,
+.tags-container .tag-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+/* --- Categories：改採和 friends 一樣的 flex 卡片群（少量項目也會置中） --- */
+.categories-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important; /* 將整組卡片置中 */
+  gap: 1rem !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  align-items: flex-start !important;
+}
+
+/* 與 friends-card 保持一致的寬度，並讓容器決定間距 */
+.categories-grid .category-item {
+  flex: 0 0 280px !important; /* 每張卡片固定寬度，可調為 240/320 */
+  max-width: 280px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 行動裝置：卡片改為撐滿寬度 */
+@media (max-width: 768px) {
+  .categories-grid {
+    gap: 8px !important;
+    padding: 0 6px !important;
+  }
+  .categories-grid .category-item {
+    flex: 0 0 calc(100% - 12px) !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 3px auto !important;
+  }
+  .tags-container { gap: 0.45rem !important; padding: 0 8px !important; }
+  .tags-container a, .tags-container .tag-item { padding: 6px 10px !important; }
+}
+
+/* 若 .wrapper （或其它容器）加了 side padding 導致偏移，強制內部容器置中 */
+.wrapper .tags-container,
+.wrapper .categories-grid {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* （排錯用）在開發時可打開 outline 幫助看哪個容器造成偏移（上線後移除） */
+/* .tags-container { outline: 1px dashed rgba(255,0,0,0.08) !important; }
+   .categories-grid { outline: 1px dashed rgba(0,0,255,0.08) !important; } */
+/* ===== 手機選單覆蓋修正（覆蓋原本 .menu input:checked ~ .trigger 規則） ===== */
+
+.menu input[type=checkbox]:checked ~ .trigger {
+  position: fixed !important;
+  inset: 0 !important; /* top:0; right:0; bottom:0; left:0; */
+  /* fallback to --vh if needed */
+  height: calc(var(--vh, 1vh) * 100) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  background-color: #fff !important;
+  z-index: 10010 !important; /* 比現有 10000+ 的元素高 */
+  padding-top: env(safe-area-inset-top) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: none !important; /* 阻止手勢傳遞（避免背景也跟著滑） */
+}
+
+/* 若 menu 使用了 .trigger 內的某個子元素作滾動區，確保該子元素可以滾動：
+   .trigger .menu-content { overflow-y:auto; -webkit-overflow-scrolling:touch; } */
+
+/* 當 menu 開啟時鎖定背景（透過 JS 加上 body.no-scroll） */
+body.no-scroll {
+  position: fixed !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+/* 若你想暫時隱藏可能蓋過選單的按鈕（#toggleButton / #closeButton），可以在開啟時隱藏 */
+body.menu-open #toggleButton,
+body.menu-open #closeButton {
+  display: none !important;
+  visibility: hidden !important;
+}

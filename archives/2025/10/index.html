@@ -21,7 +21,38 @@
       }
     })();
   </script>
-  
+<script>
+/* main-menu-fixes.js - 直接內嵌於 footer.ejs（放在 </body> 前） */
+/* 1) 設定 --vh（解決 mobile 100vh 問題）*/
+(function() {
+  function setVh(){
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  }
+  setVh();
+  window.addEventListener('resize', setVh);
+})();
+
+/* 2) 當 menu checkbox 被勾選/取消時，加入/移除 body.no-scroll 以鎖定背景滾動並加上 menu-open（可供 CSS 隱藏按鈕）*/
+(function() {
+  // 找到 menu 中的 checkbox（確保 selector 跟主題實際相符）
+  var checkbox = document.querySelector('.menu input[type=checkbox]');
+  if (!checkbox) return;
+  function updateBodyState() {
+    if (checkbox.checked) {
+      document.body.classList.add('no-scroll');
+      document.body.classList.add('menu-open');
+    } else {
+      document.body.classList.remove('no-scroll');
+      document.body.classList.remove('menu-open');
+    }
+  }
+  // 初始同步
+  updateBodyState();
+  // 監聽變化（支援點擊與 keyboard）
+  checkbox.addEventListener('change', updateBodyState);
+})();
+</script>
   <!-- 提示浏览器颜色的 meta 标签 -->
   <meta name="color-scheme" content="light dark">
   <!-- Mastodon 验证 -->
@@ -267,9 +298,9 @@
                   
                     <div class="post-tags">
                       
-                        <a href="/tags/%E5%BB%A2%E8%A9%B1/" class="tag">#廢話</a>
-                      
                         <a href="/tags/%E6%95%99%E5%AD%B8/" class="tag">#教學</a>
+                      
+                        <a href="/tags/%E5%BB%A2%E8%A9%B1/" class="tag">#廢話</a>
                       
                     </div>
                   
@@ -286,13 +317,13 @@
                   
                     <div class="post-tags">
                       
+                        <a href="/tags/%E5%BB%A2%E8%A9%B1/" class="tag">#廢話</a>
+                      
                         <a href="/tags/%E7%BE%8E%E9%A3%9F%E6%8E%A8%E8%96%A6/" class="tag">#美食推薦</a>
                       
                         <a href="/tags/APCS/" class="tag">#APCS</a>
                       
                         <a href="/tags/%E9%A1%8C%E8%A7%A3/" class="tag">#題解</a>
-                      
-                        <a href="/tags/%E5%BB%A2%E8%A9%B1/" class="tag">#廢話</a>
                       
                     </div>
                   
