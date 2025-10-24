@@ -3534,107 +3534,109 @@ html, body, .menu input[type=checkbox]:checked ~ .trigger, .menu .trigger .menu-
   max-width: 100vw !important;
   overflow-x: hidden !important;
 }
-/* ===== 強制 Menu 置中 + 跟 theme 同步（放在 main.css 最後） ===== */
-
-/* 一組更廣的 selector，盡量匹配不同主題 HTML 結構 */
-.menu input[type=checkbox]:checked ~ .trigger,
-.menu .trigger,
-.menu .menu-overlay,
-.menu .menu-trigger + .trigger,
-.menu .menu-overlay.show {
-  position: fixed !important;
-  inset: 0 !important; /* top:0; right:0; bottom:0; left:0; */
-  height: calc(var(--vh, 1vh) * 100) !important;
-  display: flex !important;
-  align-items: center !important;     /* 垂直置中 */
-  justify-content: center !important; /* 水平置中 */
-  padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) 16px !important;
-  box-sizing: border-box !important;
-  z-index: 10050 !important; /* 高於其他固定元素 */
-  overflow: hidden !important; /* 讓內容區塊自己處理滾動 */
-  /* 預設淺色背景（會被 dark 覆寫） */
-  background-color: rgba(255,255,255,0.98) !important;
-  color: inherit !important;
-}
-
-/* 確保 menu 內文字/連結會繼承顏色（避免白底下文字看不見） */
-.menu input[type=checkbox]:checked ~ .trigger *,
-.menu .trigger * {
-  color: inherit !important;
-}
-
-/* 深色主題 支援兩種常見 data-theme 寫法（html[data-theme] 或 body[data-theme]） */
-html[data-theme="dark"] .menu input[type=checkbox]:checked ~ .trigger,
-body[data-theme="dark"] .menu input[type=checkbox]:checked ~ .trigger,
-html[data-theme="dark"] .menu .trigger,
-body[data-theme="dark"] .menu .trigger {
-  background-color: rgba(10,10,12,0.95) !important;
-  color: #eaeaea !important;
-}
-
-/* menu 置中的內部容器（把真正內容放到 .menu-inner） */
-/* 若你的主題沒有 .menu-inner，請把 .menu-inner 換成對應的內部 wrapper class */
-.menu .trigger .menu-inner,
-.menu .menu-overlay .menu-inner {
-  width: 100% !important;
-  max-width: 720px !important; /* 可調整成你想要的寬度 */
-  margin: 0 auto !important;
-  box-sizing: border-box !important;
-  background: transparent !important; /* 讓背景由 overlay 決定 */
-  border-radius: 12px !important;
-  overflow: visible !important;
-}
-
-/* 內部可滾動區塊，內容過長時才會滾動 */
-.menu .trigger .menu-inner .menu-content,
-.menu .menu-overlay .menu-inner .menu-content,
-.menu .trigger .menu-content {
-  max-height: calc(var(--vh, 1vh) * 100 - 48px) !important; /* 上下各留 24px */
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  padding: 8px 12px !important;
-  box-sizing: border-box !important;
-}
-
-/* menu 連結/項目的呈現，置中且可點擊範圍大 */
-.menu .trigger .menu-content a,
-.menu .trigger .menu-content .menu-link,
-.menu .menu-overlay .menu-content a {
-  display: block !important;
-  text-align: center !important;
-  color: inherit !important;
-  padding: 12px 8px !important;
-  text-decoration: none !important;
-}
-
-/* 小螢幕微調 */
-@media (max-width: 420px) {
+/* ====== MOBILE ONLY: 强制 menu overlay 覆蓋並置中（放在 main.css 最末） ====== */
+@media (max-width: 768px) {
+  /* 匹配常見 overlay 結構，強制覆蓋 */
   .menu input[type=checkbox]:checked ~ .trigger,
-  .menu .trigger {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+  .menu .trigger,
+  .menu .menu-overlay,
+  .menu .menu-trigger + .trigger,
+  .menu .menu-overlay.show {
+    position: fixed !important;
+    inset: 0 !important;                 /* top/right/bottom/left = 0 */
+    width: 100vw !important;
+    height: calc(var(--vh, 1vh) * 100) !important; /* 使用 --vh（若沒設定會退回 1vh） */
+    display: flex !important;
+    align-items: center !important;      /* 垂直置中 */
+    justify-content: center !important;  /* 水平置中 */
+    padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) 16px !important;
+    box-sizing: border-box !important;
+    z-index: 10060 !important;           /* 高於其他固定元素 */
+    overflow: hidden !important;         /* 由內部容器處理滾動 */
+    touch-action: none !important;
+    background-color: rgba(255,255,255,0.98) !important; /* light fallback */
+    color: inherit !important;
+    max-width: 100vw !important;
   }
+
+  /* 支援多種 dark-theme 寫法（data-theme 或 class） */
+  html[data-theme="dark"] .menu input[type=checkbox]:checked ~ .trigger,
+  body[data-theme="dark"] .menu input[type=checkbox]:checked ~ .trigger,
+  html.dark .menu input[type=checkbox]:checked ~ .trigger,
+  body.dark .menu input[type=checkbox]:checked ~ .trigger,
+  html[data-theme="dark"] .menu .trigger,
+  body[data-theme="dark"] .menu .trigger,
+  html.dark .menu .trigger,
+  body.dark .menu .trigger {
+    background-color: rgba(10,10,12,0.96) !important;
+    color: #eaeaea !important;
+  }
+
+  /* 如果 overlay 內有白底盒（.menu-inner/.menu-box/.menu-container），把它設為透明 */
   .menu .trigger .menu-inner,
-  .menu .menu-overlay .menu-inner {
-    max-width: 100% !important;
+  .menu .trigger .menu-box,
+  .menu .trigger .menu-container,
+  .menu .menu-overlay .menu-inner,
+  .menu .menu-overlay .menu-box,
+  .menu .menu-overlay .menu-container {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
   }
-  .menu .trigger .menu-inner .menu-content {
-    max-height: calc(var(--vh, 1vh) * 100 - 28px) !important;
+
+  /* 內部內容盒（最大寬、置中、可滾動） */
+  .menu .trigger > .menu-inner,
+  .menu .trigger .menu-inner,
+  .menu .menu-overlay > .menu-inner,
+  .menu .menu-box {
+    width: 100% !important;
+    max-width: 720px !important; /* 可依需求調整 */
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+    border-radius: 12px !important;
+    overflow: visible !important;
+  }
+
+  /* 當內容太高時，內部滾動而 overlay 本體固定在中間 */
+  .menu .trigger .menu-inner .menu-content,
+  .menu .trigger .menu-content,
+  .menu .menu-overlay .menu-content {
+    max-height: calc(var(--vh, 1vh) * 100 - 48px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 8px 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 連結置中、顏色繼承 */
+  .menu .trigger .menu-content a,
+  .menu .trigger .menu-content .menu-link,
+  .menu .menu-overlay .menu-content a {
+    display: block !important;
+    text-align: center !important;
+    color: inherit !important;
+    padding: 12px 8px !important;
+    text-decoration: none !important;
+  }
+
+  /* 如果有明確的 white-bg class，強制覆蓋 */
+  .menu .trigger [class*="white"],
+  .menu .trigger [class*="box"],
+  .menu .trigger [class*="panel"] {
+    background: transparent !important;
+  }
+
+  /* 防止橫向溢出 */
+  html, body, .menu input[type=checkbox]:checked ~ .trigger, .menu .trigger {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* 小螢幕微調 */
+  @media (max-width: 420px) {
+    .menu input[type=checkbox]:checked ~ .trigger { padding-left: 8px !important; padding-right: 8px !important; }
+    .menu .trigger .menu-inner { max-width: 100% !important; }
+    .menu .trigger .menu-inner .menu-content { max-height: calc(var(--vh, 1vh) * 100 - 28px) !important; }
   }
 }
-
-/* 當 menu 開啟時鎖定背景滾動（JS 應該會加入 body.no-scroll 或 body.menu-open） */
-body.no-scroll,
-body.menu-open {
-  overflow: hidden !important;
-  position: fixed !important;
-  width: 100% !important;
-  height: 100% !important;
-  touch-action: none !important;
-}
-
-/* 防止水平滾動導致側邊露出 */
-html, body, .menu input[type=checkbox]:checked ~ .trigger, .menu .trigger {
-  max-width: 100vw !important;
-  overflow-x: hidden !important;
-}
+/* ====== end MOBILE ONLY menu override ====== */
