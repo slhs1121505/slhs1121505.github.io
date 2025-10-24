@@ -3089,5 +3089,70 @@ html[data-theme=dark] .waline-container .wl-editor textarea::placeholder {
     opacity: 0.6;
 }
 
+/* 修復：還原 wrapper、navbar、author 的正常流（放在 main.css 最末） */
+
+/* 還原：不要用 left/transform 來置中（會影響浮動與已定位元件） */
+.wrapper,
+.navbar,
+.author,
+.footer,
+.archive-container,
+.posts-list,
+.categories-grid,
+.friends-container {
+  box-sizing: border-box !important;
+  max-width: 890px !important;    /* 與你的原始寬度一致 */
+  width: 100% !important;
+  margin-left: auto !important;   /* ← 關鍵：水平置中 */
+  margin-right: auto !important;
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+  position: static !important;    /* 避免之前 position/left/transform 干擾 */
+  left: auto !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+}
+
+/* navbar 內原本有 float 的元素，確保其容器仍為正常定位 */
+.navbar {
+  position: relative !important;
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* author 保持原來的 flex 排列 */
+.author {
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: column !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* 手機上減小 padding，保持響應式 */
+@media screen and (max-width: 768px) {
+  .wrapper,
+  .navbar,
+  .author,
+  .footer,
+  .archive-container,
+  .posts-list,
+  .categories-grid,
+  .friends-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* navbar 固定頂端時仍維持 full-width 但裡面內容置中 */
+  .menu, .navbar {
+    width: 100% !important;
+    left: 0 !important;
+    transform: none !important;
+  }
+}
 
 /*----------------------------------以上Waline评论系统样式调整----------------------------------*/
