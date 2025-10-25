@@ -61,9 +61,11 @@
   
 
 
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>標籤 [ 張子夫的部落格 ]</title>
+<title>張子夫的部落格 - 標籤</title>
 
   <link rel="icon" href="/img/icon.png">
 
@@ -293,6 +295,7 @@
     </div>
   </small>
 </footer>
+
 <script>
 function fixVH() {
   document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
@@ -300,6 +303,63 @@ function fixVH() {
 window.addEventListener('resize', fixVH);
 fixVH();
 </script>
+
+<script>
+(function(){
+  const p = location.pathname;
+  const b = document.body;
+  if(!b) return;
+  b.classList.remove('is-tags','is-categories');
+  if(p.includes('/tags/')) b.classList.add('is-tags');
+  if(p.includes('/categories/')) b.classList.add('is-categories');
+
+  const css = `
+  /* === tags & categories layout fix (final) === */
+  body.is-tags .glass-wrapper .main-content .post-item,
+  body.is-categories .glass-wrapper .main-content .post-item,
+  .tag-div.glass-wrapper.main-content .post-item,
+  .category-div.glass-wrapper.main-content .post-item {
+    display: grid !important;
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    align-items: start !important;
+    width: 100% !important;
+    justify-items: start !important;
+    text-align: left !important;
+  }
+
+  body.is-tags .glass-wrapper .main-content .post-item .post-item-title,
+  body.is-categories .glass-wrapper .main-content .post-item .post-item-title,
+  .tag-div.glass-wrapper.main-content .post-item .post-item-title,
+  .category-div.glass-wrapper.main-content .post-item .post-item-title {
+    grid-column: 2 / -1 !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: left !important;
+    justify-self: start !important;
+    margin: 0 !important;
+  }
+
+  body.is-tags .glass-wrapper .main-content,
+  body.is-categories .glass-wrapper .main-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+  /* === end fix === */
+  `;
+  const el = document.createElement('style');
+  el.id = 'tags-cats-fix';
+  el.textContent = css;
+  document.head.appendChild(el);
+})();
+</script>
+
+
 <!-- 不蒜子統計腳本（載入成功後才顯示） -->
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script>

@@ -5391,3 +5391,697 @@ html, body { overflow-x: hidden !important; }
     box-shadow: none !important;
   }
 }
+/* =============================
+   Fix: categories/tags post-title full-line, mobile glass visible, navbar line softer
+   Append to end of main.css
+   ============================= */
+
+/* Scope helpers: cover common body page classes used by themes */
+body.tags-page,
+body.is-tags,
+body.categories-page,
+body.is-categories {}
+
+/* -----------------------------
+   1) 在 categories/xxxx 與 tags/xxxx 頁面中：
+   讓 glass-wrapper > main-content 的每個 post-item 的 title 可以完整一行顯示
+   - 單行顯示（nowrap）並用省略號避免溢出導致佈局亂掉
+   - 保證寬度可撐滿父容器（避免被狹窄的 grid/flex 列限制）
+   ----------------------------- */
+body.tags-page .glass-wrapper .main-content .post-item .post-item-title,
+body.is-tags .glass-wrapper .main-content .post-item .post-item-title,
+body.categories-page .glass-wrapper .main-content .post-item .post-item-title,
+body.is-categories .glass-wrapper .main-content .post-item .post-item-title {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;               /* allow it to stretch/shrink properly */
+  white-space: nowrap !important;        /* keep as a single line (完整一行) */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;   /* 長標題用省略號，不會壓縮旁邊版面 */
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+/* 如果你的標題是包在 a 裡面，再強制作用到 a 元素 */
+body.tags-page .glass-wrapper .main-content .post-item .post-item-title a,
+body.is-tags .glass-wrapper .main-content .post-item .post-item-title a,
+body.categories-page .glass-wrapper .main-content .post-item .post-item-title a,
+body.is-categories .glass-wrapper .main-content .post-item .post-item-title a {
+  display: inline-block !important;
+  max-width: 100% !important;
+  white-space: inherit !important;
+  overflow: inherit !important;
+  text-overflow: inherit !important;
+}
+
+/* -----------------------------
+   2) 手機板 (<=420px)：修復 .glass-wrapper .main-content 消失問題
+   - 保證在小螢幕下也可見、沒有被高度/overflow/visibility 隱藏
+   - 只影響 categories/tags 頁面
+   ----------------------------- */
+@media screen and (max-width: 420px) {
+  body.tags-page .glass-wrapper .main-content,
+  body.is-tags .glass-wrapper .main-content,
+  body.categories-page .glass-wrapper .main-content,
+  body.is-categories .glass-wrapper .main-content {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  /* 若有意外的 transform / translateY 把它歸零 */
+  body.tags-page .glass-wrapper .main-content,
+  body.is-tags .glass-wrapper .main-content,
+  body.categories-page .glass-wrapper .main-content,
+  body.is-categories .glass-wrapper .main-content {
+    transform: none !important;
+  }
+}
+
+/* -----------------------------
+   3) 桌面（min-width:769px）把 navbar / header 底線變得更透明（更淡）
+   - 只調整底線 / 細微陰影，而不是移除整個 header 樣式
+   ----------------------------- */
+@media screen and (min-width: 769px) {
+  /* 常見 header / nav 名稱集合，保守地降低底線/陰影強度 */
+  .navbar,
+  .site-navbar,
+  nav.site-nav,
+  header.site-header,
+  .site-header,
+  .topbar,
+  header {
+    /* 如果是 border-bottom */
+    border-bottom-color: rgba(0,0,0,0.04) !important;
+    /* 如果是 box-shadow 模擬線條，降低不透明度 */
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03) !important;
+  }
+}
+/* Append to end of main.css
+   Targeted fixes for categories/tags:
+   - Ensure .post-item-title inside .glass-wrapper .main-content can occupy a full line
+   - Restore mobile (.glass-wrapper .main-content) border/visibility like desktop
+   - Slightly soften desktop navbar bottom line
+   Scoped to body.tags-page / body.is-tags / body.categories-page / body.is-categories only.
+*/
+
+/* ---------- scope helpers (cover common variants) ---------- */
+body.tags-page .glass-wrapper .main-content .post-item,
+body.is-tags .glass-wrapper .main-content .post-item,
+body.categories-page .glass-wrapper .main-content .post-item,
+body.is-categories .glass-wrapper .main-content .post-item,
+body.tags-page .category-div .glass-wrapper .main-content .post-item,
+body.is-tags .category-div .glass-wrapper .main-content .post-item,
+body.categories-page .category-div .glass-wrapper .main-content .post-item,
+body.is-categories .category-div .glass-wrapper .main-content .post-item {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns: 64px minmax(0,1fr) !important;
+  gap: 6px 12px !important;
+  align-items: start !important;
+  overflow: visible !important;
+}
+
+/* Make title span full content width and present as a single visible line (ellipsis if too long) */
+body.tags-page .glass-wrapper .main-content .post-item .post-item-title,
+body.is-tags .glass-wrapper .main-content .post-item .post-item-title,
+body.categories-page .glass-wrapper .main-content .post-item .post-item-title,
+body.is-categories .glass-wrapper .main-content .post-item .post-item-title,
+body.tags-page .category-div .glass-wrapper .main-content .post-item .post-item-title,
+body.is-tags .category-div .glass-wrapper .main-content .post-item .post-item-title,
+body.categories-page .category-div .glass-wrapper .main-content .post-item .post-item-title,
+body.is-categories .category-div .glass-wrapper .main-content .post-item .post-item-title {
+  grid-column: 1 / -1 !important;     /* span whole row in the item grid */
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;    /* keep one line (完整一行) */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  box-sizing: border-box !important;
+  z-index: 3 !important;
+}
+
+/* If the title is wrapped in an <a>, ensure it inherits the same single-line behavior */
+body.tags-page .glass-wrapper .main-content .post-item .post-item-title a,
+body.is-tags .glass-wrapper .main-content .post-item .post-item-title a,
+body.categories-page .glass-wrapper .main-content .post-item .post-item-title a,
+body.is-categories .glass-wrapper .main-content .post-item .post-item-title a,
+body.tags-page .category-div .glass-wrapper .main-content .post-item .post-item-title a,
+body.is-tags .category-div .glass-wrapper .main-content .post-item .post-item-title a,
+body.categories-page .category-div .glass-wrapper .main-content .post-item .post-item-title a,
+body.is-categories .category-div .glass-wrapper .main-content .post-item .post-item-title a {
+  display: inline-block !important;
+  max-width: 100% !important;
+  white-space: inherit !important;
+  overflow: inherit !important;
+  text-overflow: inherit !important;
+}
+
+/* ---------- Mobile: ensure .glass-wrapper .main-content is visible and its border preserved ---------- */
+@media screen and (max-width: 420px) {
+  body.tags-page .glass-wrapper .main-content,
+  body.is-tags .glass-wrapper .main-content,
+  body.categories-page .glass-wrapper .main-content,
+  body.is-categories .glass-wrapper .main-content,
+  body.tags-page .category-div .glass-wrapper .main-content,
+  body.is-tags .category-div .glass-wrapper .main-content,
+  body.categories-page .category-div .glass-wrapper .main-content,
+  body.is-categories .category-div .glass-wrapper .main-content {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+
+  /* restore subtle border/background like desktop so the "white line" edge doesn't vanish */
+  body.tags-page .glass-wrapper,
+  body.is-tags .glass-wrapper,
+  body.categories-page .glass-wrapper,
+  body.is-categories .glass-wrapper,
+  body.tags-page .category-div .glass-wrapper,
+  body.is-tags .category-div .glass-wrapper,
+  body.categories-page .category-div .glass-wrapper,
+  body.is-categories .category-div .glass-wrapper {
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    background-clip: padding-box !important;
+    -webkit-backdrop-filter: none !important; /* avoid mobile quirks that hide edge */
+  }
+
+  /* keep an inner top divider if your layout used one on desktop */
+  body.tags-page .glass-wrapper .main-content,
+  body.is-tags .glass-wrapper .main-content,
+  body.categories-page .glass-wrapper .main-content,
+  body.is-categories .glass-wrapper .main-content,
+  body.tags-page .category-div .glass-wrapper .main-content,
+  body.is-tags .category-div .glass-wrapper .main-content,
+  body.categories-page .category-div .glass-wrapper .main-content,
+  body.is-categories .category-div .glass-wrapper .main-content {
+    border-top: 1px solid rgba(0,0,0,0.04) !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ---------- Slightly soften desktop navbar bottom line (visual only) ---------- */
+@media screen and (min-width: 769px) {
+  .navbar,
+  .site-navbar,
+  nav.site-nav,
+  header.site-header,
+  .site-header,
+  .topbar,
+  header {
+    border-bottom-color: rgba(0,0,0,0.04) !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03) !important;
+  }
+}
+
+/* ---------- Safety: don't accidentally apply to other pages (no-op for non-tags/categories) ---------- */
+body:not(.tags-page):not(.is-tags):not(.categories-page):not(.is-categories)
+  .glass-wrapper .main-content .post-item .post-item-title {
+  /* intentionally left blank to avoid inheritance */
+}
+/* ============================
+   FORCE-FIX: categories/tags .glass-wrapper .main-content .post-item-title
+   強制讓 post-item-title 在 categories / tags 頁面完整佔一行（不被壓窄）
+   Append this to the end of main.css
+   ============================ */
+
+/* page scopes (common variants) */
+body.tags-page, body.is-tags, body.categories-page, body.is-categories {}
+
+/* Ensure the glass-wrapper main-content allows children to size properly */
+body.tags-page .glass-wrapper .main-content,
+body.is-tags .glass-wrapper .main-content,
+body.categories-page .glass-wrapper .main-content,
+body.is-categories .glass-wrapper .main-content,
+/* also cover possible nested category-div variants */
+body.tags-page .category-div .glass-wrapper .main-content,
+body.is-tags .category-div .glass-wrapper .main-content,
+body.categories-page .category-div .glass-wrapper .main-content,
+body.is-categories .category-div .glass-wrapper .main-content {
+  /* neutralize any shrinking/overflow rules coming from other CSS */
+  display: block !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* Make each post-item a two-column grid: fixed date (if present) + flexible content.
+   This prevents the content column (title) from being squeezed by older flex/grid rules. */
+body.tags-page .glass-wrapper .main-content .post-item,
+body.is-tags .glass-wrapper .main-content .post-item,
+body.categories-page .glass-wrapper .main-content .post-item,
+body.is-categories .glass-wrapper .main-content .post-item,
+body.tags-page .category-div .glass-wrapper .main-content .post-item,
+body.is-tags .category-div .glass-wrapper .main-content .post-item,
+body.categories-page .category-div .glass-wrapper .main-content .post-item,
+body.is-categories .category-div .glass-wrapper .main-content .post-item {
+  display: grid !important;
+  grid-template-columns: 72px minmax(0, 1fr) !important; /* left date (optional) + flexible content */
+  grid-auto-rows: auto !important;
+  gap: 6px 12px !important;
+  align-items: start !important;
+  min-width: 0 !important;            /* allow inner shrink */
+  width: 100% !important;
+}
+
+/* Ensure date (if exists) stays in left column */
+body.tags-page .glass-wrapper .main-content .post-item .post-item-date,
+body.is-tags .glass-wrapper .main-content .post-item .post-item-date,
+body.categories-page .glass-wrapper .main-content .post-item .post-item-date,
+body.is-categories .glass-wrapper .main-content .post-item .post-item-date {
+  grid-column: 1 / 2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width: 72px !important;
+  min-width: 72px !important;
+}
+
+/* CRITICAL: force the title to occupy the ENTIRE content column and not be restricted */
+body.tags-page .glass-wrapper .main-content .post-item .post-item-title,
+body.is-tags .glass-wrapper .main-content .post-item .post-item-title,
+body.categories-page .glass-wrapper .main-content .post-item .post-item-title,
+body.is-categories .glass-wrapper .main-content .post-item .post-item-title,
+body.tags-page .category-div .glass-wrapper .main-content .post-item .post-item-title,
+body.is-tags .category-div .glass-wrapper .main-content .post-item .post-item-title,
+body.categories-page .category-div .glass-wrapper .main-content .post-item .post-item-title,
+body.is-categories .category-div .glass-wrapper .main-content .post-item .post-item-title {
+  grid-column: 2 / -1 !important;      /* occupy the flexible content column */
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;      /* 如果你要完整一行且不換行 (如要求)，保留 nowrap */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  box-sizing: border-box !important;
+  padding-right: 6px !important;      /* 防止緊貼邊緣 */
+  z-index: 5 !important;
+}
+
+/* If title is inside <a>, force the anchor to be block-level and full width */
+body.tags-page .glass-wrapper .main-content .post-item .post-item-title a,
+body.is-tags .glass-wrapper .main-content .post-item .post-item-title a,
+body.categories-page .glass-wrapper .main-content .post-item .post-item-title a,
+body.is-categories .glass-wrapper .main-content .post-item .post-item-title a {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  white-space: inherit !important;
+  overflow: inherit !important;
+  text-overflow: inherit !important;
+}
+
+/* Defensive: remove any max-width / width limits from likely wrapper elements */
+body.tags-page .glass-wrapper .main-content .post-item .post-item-heading,
+body.is-tags .glass-wrapper .main-content .post-item .post-item-heading,
+body.categories-page .glass-wrapper .main-content .post-item .post-item-heading,
+body.is-categories .glass-wrapper .main-content .post-item .post-item-heading {
+  min-width: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  overflow: visible !important;
+}
+
+/* For very narrow screens if you'd rather allow wrap than single-line, uncomment the block below:
+@media screen and (max-width: 420px) {
+  body.tags-page .glass-wrapper .main-content .post-item .post-item-title,
+  body.categories-page .glass-wrapper .main-content .post-item .post-item-title {
+    white-space: normal !important;
+  }
+}
+*/
+
+/* No-op safeguard: do not apply to non-tags/categories pages */
+body:not(.tags-page):not(.is-tags):not(.categories-page):not(.is-categories)
+  .glass-wrapper .main-content .post-item .post-item-title {
+  /* intentionally empty */
+}
+/* === STRONG FIX for categories/tags .glass-wrapper .main-content .post-item-title === */
+/* Paste this at the end of main.css */
+
+/* page scopes */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .category-div .glass-wrapper .main-content {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* Force each post-item into a two-column grid (date + flexible content) so content won't be squeezed */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .category-div .glass-wrapper .main-content .post-item,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item-list .post-item {
+  display: grid !important;
+  grid-template-columns: 72px minmax(0, 1fr) !important; /* left column reserved for date/meta, right column flexible */
+  grid-auto-rows: auto !important;
+  gap: 6px 12px !important;
+  align-items: start !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Ensure the left/date column stays left */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-date {
+  grid-column: 1 / 2 !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* ********* CRITICAL: force the title to occupy the entire right content column ********* */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-title,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .category-div .glass-wrapper .main-content .post-item .post-item-title,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .list-hover .post-item-title {
+  grid-column: 2 / -1 !important;      /* span the flexible content column */
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding-right: 8px !important;
+  white-space: nowrap !important;      /* 如你要求：完整一行 */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  z-index: 50 !important;
+}
+
+/* If title is an <a>, make anchor block-level full width */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-title a,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .category-div .glass-wrapper .main-content .post-item .post-item-title a {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  white-space: inherit !important;
+  overflow: inherit !important;
+  text-overflow: inherit !important;
+}
+
+/* Remove max-width / width caps from likely wrapper elements that squeeze title */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item-heading,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item-content,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item-right,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item-meta {
+  min-width: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  flex: 1 1 auto !important;
+}
+
+/* Defensive: if some ancestor uses flex and forces children not to shrink, force shrinkability */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content * {
+  min-width: 0 !important;
+  -webkit-flex-shrink: 1 !important;
+  -ms-flex-negative: 1 !important;
+  flex-shrink: 1 !important;
+}
+
+/* If you prefer titles to wrap on very narrow screens, uncomment this block (optional)
+@media screen and (max-width:420px){
+  body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-title {
+    white-space: normal !important;
+  }
+}
+*/
+
+/* End strong fix */
+/* ============================
+  PRECISION FIX for category-div glass-wrapper main-content
+  Targets: div.category-div.glass-wrapper.main-content > article.post-item(.list-hover)
+  Goal: ensure .post-item-title occupies the full right content column (not squeezed to 88px)
+  Paste this at the very end of main.css
+  ============================ */
+
+/* Very specific target path to maximize override power */
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content > article.post-item,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content > article.post-item.list-hover,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item.list-hover {
+  /* enforce predictable layout: left fixed column (meta/date) + right flexible content */
+  display: grid !important;
+  grid-template-columns: 72px minmax(0, 1fr) !important;
+  grid-auto-rows: auto !important;
+  gap: 6px 12px !important;
+  align-items: start !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* if the title is nested deeper under a .list-hover wrapper, target that too */
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content > article.post-item .list-hover,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item.list-hover .list-hover {
+  display: contents !important; /* let children participate in parent's grid */
+}
+
+/* keep date/meta fixed in column 1 */
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content > article.post-item .post-item-date,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-date {
+  grid-column: 1 / 2 !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  box-sizing: border-box !important;
+}
+
+/* CRITICAL: force title to occupy whole right column */
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content > article.post-item .post-item-title,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-title,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item.list-hover .post-item-title,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-heading .post-item-title {
+  grid-column: 2 / -1 !important;       /* occupy flexible right column */
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding-right: 8px !important;
+  white-space: nowrap !important;       /* 如你要求完整一行 */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  z-index: 999 !important;
+}
+
+/* Ensure anchor inside title is block and fills width */
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content > article.post-item .post-item-title a,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-title a {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  white-space: inherit !important;
+  overflow: inherit !important;
+  text-overflow: inherit !important;
+}
+
+/* Defensive: remove width caps from likely wrapper elements under article */
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-heading,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-content,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-right,
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-left {
+  min-width: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* Force shrinkability on all descendants to avoid flex-based squeeze */
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item * {
+  min-width: 0 !important;
+  -webkit-flex-shrink: 1 !important;
+  -ms-flex-negative: 1 !important;
+  flex-shrink: 1 !important;
+}
+
+/* If your theme also uses .post-item.list-hover > .post-item-title as an inline-block, overwrite it */
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item.list-hover > .post-item-title {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Optional: visual debug aid (uncomment to visually confirm) */
+/*
+html body div.wrapper main.page-content div.category-div.glass-wrapper.main-content article.post-item .post-item-title {
+  outline: 2px solid rgba(255,0,0,0.6) !important;
+}
+*/
+
+/* ============================
+  FINAL ADJUST: tags + categories full-line + left-align titles
+  Scope: ONLY pages with body.tags-page / body.is-tags / body.categories-page / body.is-categories
+  Paste at the end of main.css
+  ============================ */
+
+/* Generic glass-wrapper.main-content -> post-item path under tags/categories pages */
+html body div.wrapper main.page-content
+  body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item,
+html body div.wrapper main.page-content .glass-wrapper.main-content .post-item,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .category-div .glass-wrapper .main-content .post-item,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .tag-div .glass-wrapper .main-content .post-item {
+  /* ensure consistent 2-column layout so titles aren't squeezed */
+  display: grid !important;
+  grid-template-columns: 72px minmax(0, 1fr) !important;
+  grid-auto-rows: auto !important;
+  gap: 6px 12px !important;
+  align-items: start !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  justify-items: start !important; /* default children left-aligned in grid cells */
+}
+
+/* When there is an inner .list-hover wrapper, let children participate in parent grid */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item.list-hover > .list-hover {
+  display: contents !important;
+}
+
+/* Left/fixed meta column */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-date {
+  grid-column: 1 / 2 !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* CRITICAL: title occupies right column and left-aligned */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-title,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .list-hover .post-item-title,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .category-div .glass-wrapper .main-content .post-item .post-item-title {
+  grid-column: 2 / -1 !important;      /* occupy flexible right column */
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding-right: 8px !important;
+  white-space: nowrap !important;      /* 如你想要完整一行保持 nowrap */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  text-align: left !important;         /* **靠左對齊（你要的）** */
+  justify-self: start !important;      /* 保證格子內靠左 */
+  z-index: 999 !important;
+}
+
+/* 如果標題是 <a>，也確保它是 block 並靠左 */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-title a {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: left !important;
+  white-space: inherit !important;
+  overflow: inherit !important;
+}
+
+/* Remove potential caps on heading wrapper that may squeeze the title */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-heading,
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-content {
+  min-width: 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  justify-self: start !important;
+}
+
+/* Force shrinkability on all descendants under these pages to avoid flex-squeeze */
+body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item * {
+  min-width: 0 !important;
+  -webkit-flex-shrink: 1 !important;
+  -ms-flex-negative: 1 !important;
+  flex-shrink: 1 !important;
+}
+
+/* Optional small tweak: if you prefer titles to wrap on tiny screens, enable the block below */
+/*
+@media screen and (max-width:420px){
+  body:is(.tags-page,.is-tags,.categories-page,.is-categories) .glass-wrapper .main-content .post-item .post-item-title {
+    white-space: normal !important;
+  }
+}
+*/
+
+/* ======================================
+   UNIVERSAL FIX: tags & categories pages
+   - No longer depends on body class
+   - Detects via URL path (/tags/ or /categories/)
+   - Makes .post-item-title full width & left aligned
+   - Aligns entire post-item block to left
+   ====================================== */
+
+@layer tagsCatsFix {
+  /* scope for tags and categories by attribute selector (URL path) */
+  [data-page-path*="/tags/"] .glass-wrapper .main-content .post-item,
+  [data-page-path*="/categories/"] .glass-wrapper .main-content .post-item,
+  body[class*="tags"] .glass-wrapper .main-content .post-item,
+  body[class*="categories"] .glass-wrapper .main-content .post-item,
+  body.dark.loaded .glass-wrapper .main-content .post-item {
+    display: grid !important;
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    align-items: start !important;
+    width: 100% !important;
+    justify-items: start !important; /* 全部靠左 */
+    text-align: left !important;     /* 全部靠左 */
+  }
+
+  /* make sure post-item-title expands full width and left aligned */
+  [data-page-path*="/tags/"] .glass-wrapper .main-content .post-item .post-item-title,
+  [data-page-path*="/categories/"] .glass-wrapper .main-content .post-item .post-item-title,
+  body[class*="tags"] .glass-wrapper .main-content .post-item .post-item-title,
+  body[class*="categories"] .glass-wrapper .main-content .post-item .post-item-title,
+  body.dark.loaded .glass-wrapper .main-content .post-item .post-item-title {
+    grid-column: 2 / -1 !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    text-align: left !important;     /* **靠左對齊** */
+    justify-self: start !important;
+  }
+
+  /* ensure title link also full-width and left aligned */
+  [data-page-path*="/tags/"] .glass-wrapper .main-content .post-item .post-item-title a,
+  [data-page-path*="/categories/"] .glass-wrapper .main-content .post-item .post-item-title a,
+  body[class*="tags"] .glass-wrapper .main-content .post-item .post-item-title a,
+  body[class*="categories"] .glass-wrapper .main-content .post-item .post-item-title a,
+  body.dark.loaded .glass-wrapper .main-content .post-item .post-item-title a {
+    display: block !important;
+    width: 100% !important;
+    text-align: left !important;
+    white-space: inherit !important;
+    overflow: inherit !important;
+  }
+
+  /* left-align the whole content area inside glass-wrapper */
+  [data-page-path*="/tags/"] .glass-wrapper .main-content,
+  [data-page-path*="/categories/"] .glass-wrapper .main-content,
+  body[class*="tags"] .glass-wrapper .main-content,
+  body[class*="categories"] .glass-wrapper .main-content,
+  body.dark.loaded .glass-wrapper .main-content {
+    text-align: left !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+  }
+}
