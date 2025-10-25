@@ -4315,7 +4315,7 @@ html[data-theme="dark"] .header .header-title:not(.header-title.center)::before 
 .author .author-avatar-wrapper picture > img,
 .author .author-avatar-wrapper svg {
   /* 平滑的縮放過渡（只針對 transform）*/
-  transition: transform 420ms cubic-bezier(.22,.9,.26,1), filter 300ms ease, box-shadow 300ms ease !important;
+  transition: transform 420ms cubic-bezier(.22,.9,.26,1), filter 520ms ease, box-shadow 520ms ease !important;
   transform-origin: center center !important;
   will-change: transform, filter !important;
   backface-visibility: hidden !important;
@@ -4366,4 +4366,58 @@ html[data-theme="dark"] .header .header-title:not(.header-title.center)::before 
 /* 小調整：避免放大時圖片邊緣有鋸齒（可選） */
 .author .author-avatar-wrapper img {
   image-rendering: optimizeQuality !important;
+}
+/* ------------------ TIGHTEN: bring .post-item-categories closer to .post-item-title ------------------ */
+/* Append to the end of main.css */
+
+/* Make the heading row behave predictably and keep categories close to the title */
+.post-item .post-item-heading {
+  display: flex !important;
+  align-items: center !important; /* vertical center */
+  gap: 6px !important;            /* reduce spacing between title and categories */
+  column-gap: 6px !important;
+  flex-wrap: wrap !important;     /* allow wrapping but keep items tight */
+  min-width: 0 !important;        /* allow children to shrink properly */
+}
+
+/* Title: allow it to shrink (prevent it from pushing categories far away)
+   and ensure ellipsis when too long so categories sit next to it */
+.post-item .post-item-heading .post-item-title {
+  flex: 1 1 auto !important;      /* take available space but can shrink */
+  min-width: 0 !important;        /* important for text truncation inside flex */
+  margin: 0 !important;
+  padding-right: 4px !important;  /* small breathing room before categories */
+  overflow: hidden !important;
+}
+
+/* Make the link inside title ellipsize rather than forcing layout expansion */
+.post-item .post-item-title a {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+
+/* Categories: keep them as a fixed-size group next to the title */
+.post-item .post-item-categories {
+  display: flex !important;
+  flex: 0 0 auto !important;     /* do not grow — stay next to title */
+  gap: 6px !important;
+  margin: 0 !important;           /* remove extra margin that could add distance */
+  align-items: center !important;
+  white-space: nowrap !important; /* keep category badges on the same row when possible */
+}
+
+/* Individual category items: compact spacing */
+.post-item .post-item-categories li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Safe adjustments for small screens: keep categories visible but avoid overflow */
+@media screen and (max-width: 420px) {
+  .post-item .post-item-heading { gap: 4px !important; }
+  .post-item .post-item-title a { white-space: normal !important; } /* allow wrap on very narrow screens */
+  .post-item .post-item-categories { gap: 4px !important; }
 }
