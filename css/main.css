@@ -4421,3 +4421,973 @@ html[data-theme="dark"] .header .header-title:not(.header-title.center)::before 
   .post-item .post-item-title a { white-space: normal !important; } /* allow wrap on very narrow screens */
   .post-item .post-item-categories { gap: 4px !important; }
 }
+/* ========== MOBILE FIX: force date small + title+categories to the right (minimal, mobile-only) ========== */
+@media screen and (max-width: 768px) {
+  /* parent: ensure stable box + no weird negative margins */
+  .post-item {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    min-width: 0 !important;
+  }
+
+  /* shrink date so title gets room; keep it at left */
+  .post-item .post-item-date {
+    flex: 0 0 76px !important;
+    min-width: 76px !important;
+    width: 76px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    text-align: left !important;
+    position: relative !important;
+    z-index: 2 !important; /* behind title if accidental overlap */
+    line-height: 1.2 !important;
+  }
+
+  /* heading placed to the right of date (row), but constrained */
+  .post-item .post-item-heading {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important; /* allow truncation */
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    /* ensure heading doesn't overlap the left date area */
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    z-index: 3 !important;
+    max-width: calc(100% - 92px) !important; /* keep buffer from wrapper edges (92 = date + paddings) */
+  }
+
+  /* title: take remaining space, truncate on single line to avoid overflow */
+  .post-item .post-item-title {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.35 !important;
+    box-sizing: border-box !important;
+    z-index: 4 !important;
+  }
+
+  .post-item .post-item-title a {
+    display: inline-block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    transition: color 180ms ease !important; /* keep color feedback only */
+  }
+
+  /* categories: stay to the right of title, but do not force layout expansion */
+  .post-item .post-item-categories {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    gap: 6px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    z-index: 3 !important;
+  }
+
+  /* guard: prevent parent hover translations from changing mobile layout */
+  .post-item:hover {
+    transform: none !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
+
+/* Very narrow phones: allow wrapping so nothing overlaps or overflows */
+@media screen and (max-width: 420px) {
+  .post-item .post-item-heading {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    max-width: 100% !important;
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+  }
+  .post-item .post-item-categories {
+    width: 100% !important;
+    margin-top: 4px !important;
+    gap: 6px !important;
+    white-space: normal !important;
+    flex-wrap: wrap !important;
+  }
+}
+/* ========= FORCE-FIX post-item layout (append to end of main.css) ========= */
+/* Goal: prevent .post-item-date overlapping/cutting .post-item-title on mobile + desktop.
+   Uses a stable grid: [date][content]. Keeps desktop hover behavior intact. */
+
+.post-item {
+  /* Use grid to guarantee two-column layout (date | heading) and prevent overlap */
+  display: grid !important;
+  grid-template-columns: 72px 1fr !important; /* date fixed, content flexible */
+  gap: 12px !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  overflow: visible !important; /* ensure children are visible and not clipped */
+  min-width: 0 !important; /* allow children to shrink (important for ellipsis) */
+}
+
+/* Date column: small fixed width, left aligned, never grows */
+.post-item .post-item-date {
+  flex: 0 0 auto !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  padding-right: 8px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+  position: relative !important;
+  z-index: 1 !important;
+  line-height: 1.2 !important;
+}
+
+/* Heading/content column: lives to the right of date and must be allowed to shrink */
+.post-item .post-item-heading {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important; /* critical for truncation inside flex/grid */
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+/* Title: truncate on single line to avoid overflow; desktop still shows full when space */
+.post-item .post-item-title {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.35 !important;
+  box-sizing: border-box !important;
+  z-index: 3 !important;
+}
+
+.post-item .post-item-title a {
+  display: inline-block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  transition: color 160ms ease !important; /* keep color feedback only */
+}
+
+/* Categories: keep next to title but do not force expansion of content column */
+.post-item .post-item-categories {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+/* Prevent hover transform on mobile from changing spacing (keep hover visuals but not layout-shifting) */
+@media screen and (max-width: 768px) {
+  .post-item:hover {
+    transform: none !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
+
+/* Very narrow phones: allow title to wrap and categories drop to next line */
+@media screen and (max-width: 420px) {
+  .post-item {
+    grid-template-columns: 64px 1fr !important; /* slightly smaller date on very small screens */
+    gap: 8px !important;
+  }
+  .post-item .post-item-heading {
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important; /* allow wrap */
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+  }
+  .post-item .post-item-categories {
+    width: 100% !important;
+    margin-top: 6px !important;
+    gap: 6px !important;
+    white-space: normal !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+/* Optional: if you prefer an even smaller date, change the two "72px" values above to 64px or 56px. */
+/* ======= EMERGENCY OVERRIDE: fix post-item date/title overlap (append to file end) ======= */
+
+/* 1) Base: force two-column grid for each post row (date | content) */
+.post-item {
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr) !important; /* date fixed, content flexible */
+  gap: 12px !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  min-width: 0 !important;
+  position: relative !important;
+}
+
+/* 2) DATE: always single-line, no background, no transform, very small width */
+.post-item .post-item-date {
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
+  white-space: nowrap !important;       /* never wrap */
+  overflow: visible !important;
+  text-overflow: clip !important;
+  padding: 0 8px 0 0 !important;
+  box-sizing: border-box !important;
+  background: transparent !important;   /* remove any accidental bg */
+  border: none !important;
+  transform: none !important;          /* remove scale/transform side-effects */
+  transition: none !important;
+  z-index: 1 !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+}
+
+/* remove any pseudo-elements that might draw a box near date */
+.post-item .post-item-date::before,
+.post-item .post-item-date::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* also ensure child text elements do not have backgrounds */
+.post-item .post-item-date * {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 3) HEADING: content column must be allowed to shrink/grow; title above categories */
+.post-item .post-item-heading {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;             /* critical for truncation/word-wrap */
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+/* 4) TITLE: desktop shows full (wrap), mobile wraps or ellipsizes safely */
+.post-item .post-item-title {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  z-index: 3 !important;
+  /* default mobile behavior: single-line ellipsis to avoid breaking layout */
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.35 !important;
+}
+
+/* Link inside title */
+.post-item .post-item-title a {
+  display: inline-block !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  transition: color 160ms ease !important;
+}
+
+/* 5) CATEGORIES: keep compact and don't push layout */
+.post-item .post-item-categories {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+/* 6) DESKTOP: allow title to wrap (prevent cut) */
+@media screen and (min-width: 769px) {
+  .post-item {
+    grid-template-columns: 72px minmax(0, 1fr) !important; /* slightly larger date on desktop */
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;   /* allow wrap on desktop so title is not clipped */
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+  }
+
+  /* Make sure date doesn't visually overlay content on desktop */
+  .post-item .post-item-date { z-index: 1 !important; }
+  .post-item .post-item-heading { z-index: 2 !important; }
+  .post-item .post-item-title { z-index: 3 !important; }
+}
+
+/* 7) SMALL PHONES: shrink date more and allow categories to wrap as needed */
+@media screen and (max-width: 420px) {
+  .post-item {
+    grid-template-columns: 56px minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+  .post-item .post-item-date {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    font-size: 14px !important;
+  }
+  .post-item .post-item-heading { flex-wrap: wrap !important; align-items: flex-start !important; }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;  /* allow wrap to avoid truncation on very narrow screens */
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+  }
+  .post-item .post-item-categories {
+    width: 100% !important;
+    margin-top: 6px !important;
+    gap: 6px !important;
+    white-space: normal !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+/* 8) Extra hard overrides to prevent any earlier hover/transform/box-shadow from overlaying title */
+.post-item .post-item-date,
+.post-item .post-item-date * {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* 9) Debug helper (temporary) - uncomment to see boundaries */
+/*
+.post-item { outline: 1px dashed rgba(0,255,0,0.12) !important; }
+.post-item .post-item-date { outline: 1px dashed rgba(255,0,0,0.12) !important; }
+.post-item .post-item-heading { outline: 1px dashed rgba(0,0,255,0.08) !important; }
+*/
+/* MOVE TITLE RIGHT — minimal override (append to end of main.css) */
+/* Push title to the right a bit so .post-item-date never visually overlaps it. */
+
+.post-item {
+  /* ensure two-column layout baseline (safe override) */
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr) !important;
+  gap: 12px !important;
+  align-items: center !important;
+  min-width: 0 !important;
+}
+
+/* Small fixed date (never wrap) — keep behind title */
+.post-item .post-item-date {
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+  margin-right: 0 !important;
+  padding-right: 6px !important;
+  transform: none !important;
+}
+
+/* The key: push the entire heading (title + categories) to the right */
+.post-item .post-item-heading {
+  padding-left: 12px !important; /* ← the shift you wanted */
+  box-sizing: border-box !important;
+  min-width: 0 !important; /* allow inner truncation/wrapping */
+  z-index: 2 !important;
+}
+
+/* Ensure title has room and is above date */
+.post-item .post-item-title {
+  z-index: 3 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Desktop: give date slightly more room and more padding for title */
+@media screen and (min-width: 769px) {
+  .post-item {
+    grid-template-columns: 80px minmax(0, 1fr) !important;
+  }
+  .post-item .post-item-heading {
+    padding-left: 16px !important; /* more breathing room on desktop */
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important; /* allow wrap on desktop so long titles aren't truncated */
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+}
+
+/* Small phones: shrink date, but still push title a little; allow wrap when necessary */
+@media screen and (max-width: 420px) {
+  .post-item {
+    grid-template-columns: 56px minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+  .post-item .post-item-date {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    padding-right: 6px !important;
+    font-size: 14px !important;
+  }
+  .post-item .post-item-heading {
+    padding-left: 8px !important;
+    flex-wrap: wrap !important;
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important; /* avoid permanent truncation on very narrow screens */
+    overflow: visible !important;
+  }
+}
+
+/* Safety: remove any accidental background/box-shadow on date that can visually cover title */
+.post-item .post-item-date,
+.post-item .post-item-date * {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+/* ===== Minimal fix: center date vertically + nudge heading right ===== */
+/* Append this block at the very end of main.css */
+
+.post-item {
+  /* grid ensures stable two-column layout; center items vertically */
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr) !important;
+  gap: 12px !important;
+  align-items: center !important; /* <-- vertical centering of date vs title */
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* DATE: fixed narrow column, centered vertically and horizontally within its cell */
+.post-item .post-item-date {
+  display: flex !important;
+  align-items: center !important;    /* vertical center */
+  justify-content: flex-end !important; /* keep date close to title (right edge of date cell) */
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
+  padding: 0 8px 0 0 !important;     /* right padding to separate from title */
+  white-space: nowrap !important;    /* never wrap */
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  z-index: 1 !important;
+  line-height: 1 !important;
+  font-weight: 700 !important;
+}
+
+/* remove any pseudo elements near date that might draw boxes */
+.post-item .post-item-date::before,
+.post-item .post-item-date::after { content: none !important; display: none !important; }
+
+/* HEADING: nudge entire heading to the right so date never overlaps title */
+.post-item .post-item-heading {
+  padding-left: 18px !important; /* ← the horizontal nudge */
+  box-sizing: border-box !important;
+  min-width: 0 !important;       /* allow inner truncation/wrapping */
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  z-index: 2 !important;
+}
+
+/* TITLE: ensure it sits above date and truncates/wraps properly */
+.post-item .post-item-title {
+  z-index: 3 !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;      /* default: single-line ellipsis on small screens */
+  text-overflow: ellipsis !important;
+  line-height: 1.35 !important;
+}
+
+/* on desktop allow wrap so long titles aren't visually cut */
+@media screen and (min-width: 769px) {
+  .post-item { grid-template-columns: 80px minmax(0, 1fr) !important; }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+  }
+  .post-item .post-item-heading { padding-left: 22px !important; } /* slightly more breathing room on desktop */
+}
+
+/* very small screens: shrink date, allow heading wrap if needed */
+@media screen and (max-width: 420px) {
+  .post-item { grid-template-columns: 56px minmax(0, 1fr) !important; gap: 8px !important; }
+  .post-item .post-item-date {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    font-size: 14px !important;
+    padding-right: 6px !important;
+    justify-content: center !important; /* center horizontally on very narrow phones */
+  }
+  .post-item .post-item-heading { padding-left: 8px !important; flex-wrap: wrap !important; align-items: flex-start !important; }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important; /* allow wrap to avoid permanent truncation on tiny screens */
+    overflow: visible !important;
+  }
+}
+
+/* Safety: ensure date has no hover-transform or box that can cover title */
+.post-item .post-item-date,
+.post-item .post-item-date * {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+/* ====== FIX: keep date inside card + horizontally center date relative to title ====== */
+/* Append to end of main.css - minimal & targeted override */
+
+.post-item {
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr) !important; /* date | content */
+  gap: 12px !important;
+  align-items: center !important;          /* vertical center */
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  /* INSET everything a bit so date cannot escape the card's rounded edge */
+  padding-left: 18px !important;           /* <-- keep date inside card */
+  padding-right: 18px !important;
+  position: relative !important;
+}
+
+/* Date: center horizontally & vertically inside its column; never wrap */
+.post-item .post-item-date {
+  display: flex !important;
+  align-items: center !important;          /* vertical center */
+  justify-content: center !important;      /* horizontal center relative to title */
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
+  white-space: nowrap !important;          /* never wrap */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+  z-index: 1 !important;
+  line-height: 1 !important;
+  font-weight: 700 !important;
+}
+
+/* remove stray pseudo-elements that might draw outside the card */
+.post-item .post-item-date::before,
+.post-item .post-item-date::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Heading: keep nudged right but inside the padded area */
+.post-item .post-item-heading {
+  padding-left: 12px !important;           /* small nudge, but date kept inside by .post-item padding */
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  z-index: 2 !important;
+}
+
+/* Title: default single-line ellipsis on small screens; allow wrap on desktop */
+.post-item .post-item-title {
+  z-index: 3 !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.35 !important;
+}
+
+/* Desktop: more room for date and allow title wrap so it's not cut off */
+@media screen and (min-width: 769px) {
+  .post-item {
+    padding-left: 22px !important;
+    grid-template-columns: 80px minmax(0, 1fr) !important;
+  }
+  .post-item .post-item-date {
+    width: 80px !important;
+    min-width: 80px !important;
+    max-width: 80px !important;
+    justify-content: center !important;
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+  }
+  .post-item .post-item-heading { padding-left: 18px !important; }
+}
+
+/* Very narrow phones: shrink date and allow heading to wrap */
+@media screen and (max-width: 420px) {
+  .post-item {
+    padding-left: 12px !important;
+    gap: 8px !important;
+    grid-template-columns: 56px minmax(0, 1fr) !important;
+  }
+  .post-item .post-item-date {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    font-size: 14px !important;
+    justify-content: center !important;   /* center small date */
+  }
+  .post-item .post-item-heading {
+    padding-left: 8px !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;        /* allow wrap to avoid truncation on tiny screens */
+    overflow: visible !important;
+  }
+}
+
+/* Safety: ensure date box doesn't create horizontal overflow */
+html, body {
+  overflow-x: hidden !important;
+}
+/* ===== Quick fix: keep date inside card + nudge title right ===== */
+.post-item {
+  display: grid !important;
+  grid-template-columns: 72px 1fr !important; /* left: date, right: content */
+  gap: 16px !important;
+  align-items: center !important; /* vertical center date <-> title */
+  padding: 8px 18px !important;   /* keep content inset so date doesn't escape card */
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+.post-item .post-item-date {
+  display: flex !important;
+  align-items: center !important;    /* vertical center in its column */
+  justify-content: center !important;/* horizontal center relative to title */
+  width: 72px !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  white-space: nowrap !important;    /* never wrap the date */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+  z-index: 1 !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+/* remove stray pseudo elements near date */
+.post-item .post-item-date::before,
+.post-item .post-item-date::after { content: none !important; display: none !important; }
+
+/* push heading right a bit so date never overlaps title */
+.post-item .post-item-heading {
+  padding-left: 18px !important; /* the "move right" you wanted */
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  z-index: 2 !important;
+}
+
+/* title: keep truncation on small screens, but allow wrap on desktop */
+.post-item .post-item-title {
+  z-index: 3 !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.35 !important;
+}
+
+/* desktop: allow wrap so long titles are not cut */
+@media screen and (min-width: 769px) {
+  .post-item {
+    grid-template-columns: 88px minmax(0, 1fr) !important; /* give desktop date a bit more room */
+    padding-left: 20px !important;
+  }
+  .post-item .post-item-date {
+    width: 88px !important;
+    min-width: 88px !important;
+    max-width: 88px !important;
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+  }
+  .post-item .post-item-heading { padding-left: 20px !important; }
+}
+
+/* very small screens: shrink date & allow heading wrap if necessary */
+@media screen and (max-width: 420px) {
+  .post-item {
+    grid-template-columns: 56px 1fr !important;
+    gap: 8px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .post-item .post-item-date {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    font-size: 14px !important;
+    justify-content: center !important;
+  }
+  .post-item .post-item-heading {
+    padding-left: 8px !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important; /* allow wrap on tiny screens */
+    overflow: visible !important;
+  }
+}
+
+/* safety: prevent horizontal overflow from page */
+html, body { overflow-x: hidden !important; }
+/* ===== Minimal tweak: nudge date slightly left while keeping it inside the card ===== */
+/* Append to end of main.css */
+
+.post-item {
+  /* keep the safe inset so the date won't escape the rounded card */
+  padding-left: 10px !important;   /* reduced from previous inset so date moves left */
+  padding-right: 14px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* Move the date a bit left by reducing its internal left padding.
+   Keep left alignment (flex-start) so numbers sit close to the card edge but still inset. */
+.post-item .post-item-date {
+  padding-left: 2px !important;    /* small inset from card edge */
+  padding-right: 10px !important;  /* breathing room to title */
+  justify-content: flex-start !important; /* keep left-aligned in its column */
+  width: 72px !important;          /* keep existing column width */
+  min-width: 72px !important;
+  max-width: 72px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* Desktop: slightly more room for date column but still left-shifted (if you use larger desktop widths) */
+@media screen and (min-width: 769px) {
+  .post-item { padding-left: 14px !important; } /* desktop card inset slightly larger */
+  .post-item .post-item-date {
+    width: 88px !important;
+    min-width: 88px !important;
+    max-width: 88px !important;
+    padding-left: 4px !important; /* keep small inset on desktop */
+  }
+}
+
+/* Very small phones: keep date centered horizontally to avoid visual imbalance */
+@media screen and (max-width: 420px) {
+  .post-item { padding-left: 12px !important; }
+  .post-item .post-item-date {
+    width: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    padding-left: 0 !important;
+    justify-content: center !important;
+  }
+}
+/* ===== Final nudge: move date slightly further left (append to end of main.css) ===== */
+
+/* Reduce card inset a bit (keep enough space so date doesn't get clipped) */
+.post-item {
+  padding-left: 8px !important;   /* safe inset inside rounded card */
+  padding-right: 14px !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* Nudge date left visually without changing column sizing */
+.post-item .post-item-date {
+  /* remove extra inner left padding and apply a small negative margin so it sits closer to edge */
+  padding-left: 0 !important;
+  padding-right: 10px !important;
+  margin-left: -8px !important;   /* <-- main tweak: move date left by 8px */
+  justify-content: flex-start !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* Desktop: slightly larger left nudge (if you want it more pronounced on wide screens) */
+@media screen and (min-width: 769px) {
+  .post-item { padding-left: 12px !important; }
+  .post-item .post-item-date {
+    margin-left: -12px !important; /* a little more left on desktop */
+    padding-left: 2px !important;  /* keep a hair of inset so text isn't flush against edge */
+  }
+}
+
+/* Very small screens: keep date centered to avoid visual imbalance */
+@media screen and (max-width: 420px) {
+  .post-item { padding-left: 12px !important; }
+  .post-item .post-item-date {
+    margin-left: 0 !important;     /* no negative shift on very narrow phones */
+    padding-left: 0 !important;
+    justify-content: center !important;
+    width: 56px !important;
+    min-width: 56px !important;
+  }
+}
+
+/* Safety: ensure date won't be clipped by overflow:hidden anywhere up the chain */
+.post-item,
+.post-item .post-item-date,
+.post-item .post-item-heading {
+  overflow: visible !important;
+}
+
+/* Keep hover animation intact (explicitly ensure transform is allowed) */
+.post-item { transition: transform 320ms cubic-bezier(.2,.9,.2,1) !important; }
+.post-item:hover { transform: translateX(10px) !important; }
+/* ===== Prevent title clipping on hover + smoother scale animation =====
+   - Allow overflow on the post-item / heading / title so scaled title can escape without being clipped.
+   - Ensure the title link is positioned above the date (z-index) when hovered.
+   - Add a smooth, modest scale transform for hover with respects for reduced-motion.
+   Append this block to the END of main.css. */
+
+.post-item,
+.post-item .post-item-heading,
+.post-item .post-item-title {
+  /* Allow visual overflow so scale isn't clipped by parent boxes */
+  overflow: visible !important;
+  /* keep box-sizing consistent */
+  box-sizing: border-box !important;
+}
+
+/* Make sure the anchor can be transformed and drawn above the date */
+.post-item .post-item-title a {
+  position: relative !important;              /* so z-index works reliably */
+  display: inline-block !important;           /* allow transform to scale the element */
+  transform-origin: left center !important;   /* scale from left side (looks natural in a list) */
+  will-change: transform !important;
+  z-index: 1000 !important;                   /* sits above date */
+  transition: transform 280ms cubic-bezier(.2,.9,.2,1), color 160ms ease !important;
+  /* keep text ellipsis behavior on small screens by limiting width if desired */
+  max-width: 100% !important;
+  /* no overflow hidden here — parent allows overflow */
+  overflow: visible !important;
+}
+
+/* Hover / focus: smooth scale (modest) and maintain readable color change */
+.post-item .post-item-title a:hover,
+.post-item .post-item-title a:focus {
+  transform: scale(1.06) !important;          /* smooth modest enlargement */
+  color: #ffffff !important;
+  outline: none !important;
+}
+
+/* Keep keyboard accessibility: also scale on :focus-visible for keyboard users */
+.post-item .post-item-title a:focus-visible {
+  transform: scale(1.04) !important;
+  box-shadow: 0 6px 18px rgba(13,18,43,0.08) !important;
+}
+
+/* Ensure date stays visually under the title (lower stacking) */
+.post-item .post-item-date {
+  z-index: 1 !important;
+  position: relative !important; /* ensure z-index context */
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .post-item .post-item-title a,
+  .post-item .post-item-title a:hover,
+  .post-item .post-item-title a:focus,
+  .post-item .post-item-title a:focus-visible {
+    transition: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
