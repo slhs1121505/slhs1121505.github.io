@@ -4945,3 +4945,218 @@ html[data-theme="dark"] .header .header-title:not(.header-title.center)::before 
   /* do not set transition: all or change transform here — keep existing behavior */
   box-sizing: border-box !important;
 }
+/* Minimal safe fix — preserve title hover scale/color, prevent clipping,
+   enforce desktop compact layout and mobile stacked layout.
+   Append this to the end of main.css */
+
+/* --- Parent: prevent parent-level transforms/padding on hover that cause clipping --- */
+.post-item {
+  overflow: visible !important;                /* allow children to show overflow when scaled */
+  box-sizing: border-box !important;
+  transform: none !important;                  /* cancel any legacy transform */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  /* keep subtle hover shadow but do NOT translate/scale parent */
+  transition: box-shadow 260ms cubic-bezier(.22,.9,.26,1) !important;
+}
+.post-item:hover {
+  transform: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.06) !important; /* safe visual feedback */
+}
+
+/* --- Date column stable width (desktop) --- */
+.post-item .post-item-date {
+  flex: 0 0 120px !important;
+  min-width: 120px !important;
+  width: 120px !important;
+  padding-right: 12px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  z-index: 1 !important; /* below title */
+  position: relative !important;
+}
+
+/* --- Heading: compact inline layout on desktop --- */
+.post-item .post-item-heading {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  column-gap: 8px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;        /* allow truncation */
+  overflow: visible !important;   /* important so scaled title is not clipped by heading */
+  box-sizing: border-box !important;
+}
+
+/* --- Title: truncation on desktop but allow visible overflow on hover, keep hover scale/color --- */
+.post-item .post-item-title {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding-left: 8px !important;   /* breathing room from date */
+  overflow: hidden !important;    /* normal state: ellipsis */
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  position: relative !important;
+  z-index: 5 !important;          /* default above date/categories */
+  transition: color 180ms ease !important; /* keep color transition */
+}
+
+/* Allow the scaled link to be visible above everything — show overflow while hovered */
+.post-item .post-item-title a {
+  display: inline-block !important;
+  transition: color 180ms ease, transform 220ms cubic-bezier(.22,.9,.26,1) !important;
+  will-change: transform, color;
+  transform-origin: left center !important; /* scale outward from left so it doesn't push right content */
+  -webkit-text-size-adjust: none !important;
+}
+
+/* When hovered, allow overflow visible so the scale shows; ensure high stacking */
+.post-item .post-item-title a:hover,
+.post-item .post-item-title a:focus {
+  /* keep existing scale/color behavior (do not remove) */
+  z-index: 9999 !important;
+  position: relative !important;
+  /* do not change white-space / overflow here — scale only (no layout reflow) */
+}
+
+/* If there are older rules that forcibly set overflow:hidden on parents, override: */
+.post-item,
+.post-item .post-item-heading,
+.post-item .post-item-title {
+  overflow: visible !important;
+}
+
+/* --- Categories: compact and adjacent to title on desktop --- */
+.post-item .post-item-categories {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  z-index: 2 !important;
+}
+
+/* --- Mobile: stack heading (title above categories), shrink date to avoid overlap --- */
+@media screen and (max-width: 768px) {
+  .post-item {
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .post-item .post-item-date {
+    flex: 0 0 88px !important;
+    min-width: 88px !important;
+    width: 88px !important;
+    padding-right: 8px !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  .post-item .post-item-heading {
+    display: flex !important;
+    flex-direction: column !important; /* title on top, categories below */
+    align-items: flex-start !important;
+    gap: 6px !important;
+    overflow: visible !important;      /* avoid clipping scaled items (though hover rarely on mobile) */
+    width: auto !important;
+  }
+
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;    /* allow wrapping on mobile */
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .post-item .post-item-categories {
+    white-space: normal !important;
+    margin-top: 4px !important;
+    gap: 6px !important;
+  }
+}
+
+/* --- Safety: neutralize any legacy rule that scales date or parent on hover --- */
+.post-item:hover .post-item-date,
+.post-item:active .post-item-date {
+  transform: none !important;
+}
+
+/* --- Keep transitions limited to color & transform on link only (avoid layout reflow) --- */
+.post-item,
+.post-item .post-item-heading,
+.post-item .post-item-date,
+.post-item .post-item-title,
+.post-item .post-item-categories {
+  transition-property: box-shadow !important;
+  transition-duration: 260ms !important;
+  transition-timing-function: cubic-bezier(.22,.9,.26,1) !important;
+}
+
+/* End of fixes */
+/* Minimal fix — allow title to overflow while preserving ellipsis normally.
+   Append to end of main.css */
+
+/* Ensure parent doesn't clip scaled children */
+.post-item,
+.post-item .post-item-heading {
+  overflow: visible !important;
+  -webkit-transform: translateZ(0); /* promote to GPU layer */
+  transform: translateZ(0);
+  backface-visibility: hidden !important;
+}
+
+/* Keep ellipsis in normal state but allow overflow when hovered/focused */
+.post-item .post-item-title {
+  overflow: hidden !important;               /* normal: ellipsis */
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.4 !important;                /* a little taller to avoid visual clipping */
+  padding-bottom: 2px !important;            /* spare room so scaled descenders aren't cut */
+  box-sizing: border-box !important;
+}
+
+/* Title link: smooth scale from left, GPU-accelerate, allow visible overflow on hover/focus */
+.post-item .post-item-title a {
+  display: inline-block !important;          /* ensure transform doesn't affect layout */
+  transform-origin: left center !important;  /* scale outward to the right */
+  -webkit-transform-origin: left center !important;
+  will-change: transform, color !important;
+  -webkit-transform: translateZ(0) !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  transition: color 180ms ease, transform 220ms cubic-bezier(.22,.9,.26,1) !important;
+}
+
+/* When link/title is hovered or focused, make the title container allow visible overflow so the scale is not clipped */
+.post-item .post-item-title:hover,
+.post-item .post-item-title:focus-within,
+.post-item .post-item-title a:hover,
+.post-item .post-item-title a:focus {
+  overflow: visible !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+  z-index: 9999 !important;                 /* show above siblings */
+  position: relative !important;
+}
+
+/* Safety: make categories/date stay visually stable (don't change parent layout on hover) */
+.post-item:hover .post-item-date,
+.post-item:hover .post-item-categories {
+  transform: none !important;
+}
+
+/* Mobile: keep stacked layout and allow wrapping (no hover there) */
+@media screen and (max-width: 768px) {
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;
+    overflow: visible !important;
+    line-height: 1.4 !important;
+  }
+}
