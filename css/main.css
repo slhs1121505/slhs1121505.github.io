@@ -3741,3 +3741,629 @@ html, body, .menu input[type=checkbox]:checked ~ .trigger, .menu .trigger .menu-
     padding-bottom: 0 !important;
   }
 }
+/* ------------------ DESKTOP: mode toggle 垂直對齊 & 主區塊穩定性（append to end of main.css） ------------------ */
+/* 只作用於桌面 (>=769px)：
+   - 讓日/夜切換按鈕與菜單文字高度一致（垂直置中）
+   - 不改變手機版（已由先前規則處理）
+*/
+@media screen and (min-width: 769px) {
+  /* 讓 navbar 的 menu 區塊以 flex 置中對齊內容（桌面安全範圍） */
+  .navbar .menu {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px;
+  }
+
+  /* 保持 trigger（右側菜單區）靠右 */
+  .menu .trigger {
+    margin-left: auto !important;
+    display: flex;
+    align-items: center;
+  }
+
+  /* 將日/夜切換按鈕改為與文字同一行、垂直置中（覆蓋 float/top 的定位） */
+  .menu a#mode {
+    float: none !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 8px 0 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 48px;                /* 與 menu 高度對齊（視你的 navbar 高度可調整） */
+    padding: 0 6px !important;
+    transform: translateY(0) !important;
+    z-index: 1002 !important;
+    opacity: 0.9;
+  }
+
+  /* 如需微調「再往下」或「再往上」，修改下面的 translateY(px)（正值往下） */
+  /* 例如： .menu a#mode { transform: translateY(2px) !important; } */
+
+  /* 確保 menu 文字和 icon 也垂直置中 */
+  .menu .menu-link,
+  .menu .menu-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 48px !important;
+    line-height: normal !important;
+  }
+
+  /* svg / icon 垂直對齊 */
+  .menu a#mode svg,
+  .menu .menu-icon svg {
+    vertical-align: middle !important;
+    display: block;
+  }
+
+  /* 保留深/淺色外觀（不改變顏色）— 如需再調色可另外指定 */
+}
+/* ------------------ FIX: hide mobile menu icon on DESKTOP and restore mode-button position ------------------ */
+/* Append to the end of main.css */
+
+/* Ensure mobile menu icon only shows on small screens and is hidden on desktop */
+@media screen and (min-width: 769px) {
+  /* Hide the hamburger / mobile menu icon on desktop */
+  .menu .menu-icon,
+  .menu .menu-trigger {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* Restore a#mode to inline position and vertically align with menu links on desktop */
+  .menu a#mode {
+    float: none !important;            /* remove float that can cause push/overlap */
+    position: relative !important;
+    top: 0 !important;                 /* keep on the same baseline as menu text */
+    margin: 0 8px 0 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 48px !important;           /* match menu height (adjust if your navbar differs) */
+    padding: 0 6px !important;
+    transform: translateY(0) !important;
+    z-index: 1002 !important;
+    opacity: 0.95 !important;
+  }
+
+  /* Make sure menu links are vertically centered too */
+  .menu .menu-link,
+  .menu .menu-item {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 48px !important;
+    line-height: normal !important;
+  }
+
+  /* Ensure the trigger area stays right-aligned */
+  .menu .trigger {
+    margin-left: auto !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
+/* Keep original mobile behavior intact (explicitly show mobile icon on small screens) */
+@media screen and (max-width: 768px) {
+  .menu .menu-icon {
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* mobile: keep mode button positioned as mobile rules expect */
+  .menu a#mode {
+    float: left !important;
+    position: relative !important;
+    top: 10px !important;
+    left: 8px !important;
+    display: block !important;
+    height: 50px !important;
+    padding: 0 6px !important;
+  }
+}
+
+/* Safety: if any previous global rules forced the hamburger visible, override it on desktop */
+@supports (display: grid) {
+  @media screen and (min-width: 769px) {
+    .menu .menu-icon[style],
+    .menu .menu-icon {
+      display: none !important;
+    }
+  }
+}
+/* ------------------ STRONG FIX: enforce identical spacing for LIGHT/DARK and fix toggle alignment ------------------ */
+/* Append this to the end of main.css */
+
+/* Goal:
+   - Make mobile/desktop spacing identical between light and dark themes for:
+     categories, archive(檔案館), friends(友鏈), author(關於我), tags
+   - Prevent any theme-switch transform/animation from "pulling up" cards
+   - Keep the card background a bit wider but prevent overflow ("怕跑出去")
+   - Ensure desktop mode toggle button vertically aligns with menu text
+*/
+
+/* 1) Global: ensure both themes use same baseline spacing for these sections */
+html[data-theme="light"] .categories-grid,
+html[data-theme="dark"]  .categories-grid,
+html[data-theme="light"] .archive-container,
+html[data-theme="dark"]  .archive-container,
+html[data-theme="light"] .friends-container,
+html[data-theme="dark"]  .friends-container,
+html[data-theme="light"] .tags-container,
+html[data-theme="dark"]  .tags-container,
+html[data-theme="light"] .author,
+html[data-theme="dark"]  .author {
+  /* baseline padding/margin consistent across themes */
+  margin-top: 1.6rem !important;
+  margin-bottom: 1.6rem !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  box-sizing: border-box !important;
+}
+
+/* 2) Card items: keep the same spacing/title-to-card gap and prevent transforms */
+.categories-grid .category-item,
+.archive-post-item,
+.friends-card,
+.glass-wrapper {
+  margin: 12px 0 !important;      /* stable gap between title and card */
+  padding: 14px !important;       /* stable internal padding */
+  border-radius: 12px !important;
+  box-sizing: border-box !important;
+  transform: none !important;     /* remove any translateY/scale that may "lift" cards */
+  transition: none !important;    /* avoid transition between themes causing visual jump */
+  max-width: 100% !important;     /* avoid overflow */
+}
+
+/* Keep about-me (author) card visually slightly wider but constrained to container */
+.author .author-avatar-wrapper,
+.author .glass-wrapper,
+.author .author-bio {
+  width: auto !important;
+  max-width: calc(100% - 24px) !important; /* leave 12px padding both sides */
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* 3) Titles and subtitles: stable bottom margin so title->card distance won't change */
+.header .header-title,
+.friends-subtitle,
+.archive-title,
+.tags-page .tags-title,
+.header {
+  margin-bottom: 0.9rem !important;
+}
+
+/* 4) Mobile specific: enforce identical behavior for both themes (<=768px) */
+@media screen and (max-width: 768px) {
+  html[data-theme="light"] .wrapper,
+  html[data-theme="dark"]  .wrapper {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Prevent any pseudo-element or fixed background from changing scroll layout */
+  body::before {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
+    width: 100vw !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+  }
+
+  /* Make sure list/grid containers do NOT create inner scrolls that change visual density */
+  .friends-container,
+  .categories-grid,
+  .tags-container,
+  .archive-container {
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: auto !important;
+  }
+
+  /* Explicit stable spacing for mobile cards */
+  .categories-grid .category-item,
+  .archive-post-item,
+  .friends-card {
+    margin: 10px 0 !important;
+    padding: 12px !important;
+  }
+}
+
+/* 5) Desktop: ensure mode toggle vertically aligns with menu text and no extra mobile icon appears */
+@media screen and (min-width: 769px) {
+  .navbar .menu {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  /* hide mobile icon specifically on desktop */
+  .menu .menu-icon,
+  .menu .menu-trigger {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* place mode toggle inline and vertically centered with menu text */
+  .menu a#mode {
+    float: none !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 8px 0 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 48px !important;           /* match navbar height; adjust if your navbar differs */
+    padding: 0 6px !important;
+    transform: translateY(0) !important; /* tweak if you want slightly lower: translateY(2px) */
+    z-index: 1002 !important;
+  }
+
+  .menu .menu-link,
+  .menu .menu-item,
+  .menu .menu-icon svg {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 48px !important;
+  }
+}
+
+/* 6) Extra safety: any theme-specific rules accidentally changing spacing are overridden */
+html[data-theme="light"] .category-item,
+html[data-theme="dark"]  .category-item,
+html[data-theme="light"] .archive-post-item,
+html[data-theme="dark"]  .archive-post-item,
+html[data-theme="light"] .friends-card,
+html[data-theme="dark"]  .friends-card {
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+/* 7) Debug helper (temporary): outlines to see where spacing comes from.
+   Remove or comment out when you confirm the fix works. */
+/*
+.categories-grid .category-item,
+.archive-post-item,
+.friends-card {
+  outline: 1px dashed rgba(255,0,0,0.06) !important;
+}
+*/
+/* ------------------ FIX: avatar became huge oval + ::marker overflowing wrapper ------------------ */
+/* Append this block to the end of main.css */
+
+/* ---------- 1) Avatar fix: force square, contained avatar and prevent oval/stretch ---------- */
+/* Keep it responsive but capped, and ensure image uses object-fit:cover so it's never stretched. */
+.author .author-avatar-wrapper {
+  /* responsive but bounded size to avoid becoming huge */
+  width: clamp(56px, 7.5vw, 90px) !important;
+  aspect-ratio: 1 / 1 !important;        /* ensure square */
+  max-width: 90px !important;
+  max-height: 90px !important;
+  border-radius: 50% !important;         /* force perfect circle */
+  overflow: hidden !important;           /* crop overflow */
+  display: inline-block !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;                 /* remove accidental inner padding */
+  background-color: transparent !important; /* keep original background if needed */
+}
+
+/* Ensure the avatar element (img/svg) fills wrapper and keeps aspect ratio */
+.author .author-avatar,
+.author .author-avatar-wrapper img,
+.author .author-avatar-wrapper svg,
+.author .author-avatar-wrapper picture > img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;          /* crop to fit, preserve aspect */
+  border-radius: 50% !important;         /* reinforce circular shape */
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* If some rule sets avatar to width:auto/height:auto, override that */
+.author .author-avatar,
+.author .author-avatar-wrapper img {
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+/* Keep avatar wrapper aligned with other header content (if needed) */
+.author .author-avatar-wrapper {
+  vertical-align: middle !important;
+  margin: 0 auto !important;
+}
+
+/* ---------- 2) ::marker / list markers: prevent marker from sticking out of .wrapper ---------- */
+/* The simplest robust fix: ensure lists inside the page wrapper have enough left padding so markers are inside. */
+.wrapper ul,
+.wrapper ol,
+.post ul,
+.post ol,
+.page-content ul,
+.page-content ol {
+  padding-left: 1.35rem !important;     /* bring markers in; adjust small value if needed */
+  margin-left: 0 !important;             /* avoid extra left margin that can push markers out */
+  box-sizing: border-box !important;
+  list-style-position: outside !important; /* keep default outside but inside wrapper padding */
+}
+
+/* Slightly larger indent for nested lists to maintain visual hierarchy */
+.wrapper ul ul,
+.wrapper ol ol,
+.post ul ul,
+.post ol ol {
+  padding-left: 1.05rem !important;
+}
+
+/* If you use ::marker styles elsewhere that enlarge content, cap marker font-size */
+.wrapper ::marker,
+.post ::marker,
+.page-content ::marker {
+  font-size: 1em !important;             /* keep markers same scale as body text */
+  line-height: 1 !important;
+  color: inherit !important;
+}
+
+/* For lists that were using negative text-indent or custom marker positioning, ensure list items don't overflow */
+.wrapper li,
+.post li,
+.page-content li {
+  overflow: visible !important;
+  word-break: break-word !important;
+}
+
+/* For very narrow containers on mobile, slightly reduce marker padding so content still fits */
+@media screen and (max-width: 420px) {
+  .wrapper ul,
+  .wrapper ol,
+  .post ul,
+  .post ol {
+    padding-left: 1.05rem !important;
+  }
+}
+
+/* ---------- 3) Safety overrides: remove transforms/transitions that may "lift" content when theme changes ---------- */
+/* Prevent theme-switch animations from moving cards/author/avatar unexpectedly */
+.author,
+.category-item,
+.archive-post-item,
+.friends-card,
+.glass-wrapper,
+.wrapper .post {
+  transform: none !important;
+  transition: none !important;
+}
+
+/* ------------------ FORCE: avatar 正圓 & 修正 title ::before 凸出（append to end） ------------------ */
+
+/* ===== Avatar: 强制正圆且不被父容器拉伸 ===== */
+/* 说明：使用固定（但响应式）同宽高值，并阻止 flex/stretch 拉伸 */
+.author .author-avatar-wrapper {
+  --avatar-size: 70px;                     /* 可调整为 56px / 80px 等 */
+  width: var(--avatar-size) !important;
+  height: var(--avatar-size) !important;   /* 强制等于 width，保证正圆 */
+  min-width: var(--avatar-size) !important;
+  min-height: var(--avatar-size) !important;
+  max-width: var(--avatar-size) !important;
+  max-height: var(--avatar-size) !important;
+  flex: 0 0 var(--avatar-size) !important; /* 防止被 flex 拉伸 */
+  display: inline-block !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  background-color: transparent !important;
+  vertical-align: middle !important;
+}
+
+/* 內部圖片/元素填滿容器，並保持 cover（不失真）*/
+.author .author-avatar,
+.author .author-avatar-wrapper img,
+.author .author-avatar-wrapper picture > img,
+.author .author-avatar-wrapper svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;   /* 剪裁並填滿，保證不變形 */
+  border-radius: 50% !important;  /* reinforce circular mask */
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* 如果你想讓 avatar 在不同屏寬有不同大小，可用 media query 覆蓋 --avatar-size */
+/* 例如：手機上稍微小一點 */
+@media (max-width: 420px) {
+  .author .author-avatar-wrapper { --avatar-size: 56px; }
+}
+
+/* ===== Title ::before 修正：不再凸出 wrapper ===== */
+/* 原先使用 left: -15px 會導致在某些容器下超出。改成放在標題內部且預留間距。 */
+.header .header-title {
+  position: relative !important;    /* 讓 pseudo-element 定位於標題內 */
+  padding-left: 0.75rem !important; /* 給標題留出與左側裝飾的空白 */
+  box-sizing: border-box !important;
+}
+
+/* 只對非置中標題加左側裝飾（且在標題內部） */
+.header .header-title:not(.header-title.center)::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;               /* 放在標題內左側，不會超出 wrapper */
+  top: 12% !important;
+  height: 75% !important;
+  width: 5px !important;            /* 明顯但不會造成溢出 */
+  background-color: #f66 !important; /* 舊規則是 border-left:5px solid #f66，改為內部背景 */
+  border: none !important;
+  box-sizing: border-box !important;
+  pointer-events: none !important;
+}
+
+/* 深色主题下的装饰色一致性（如果需要） */
+html[data-theme="dark"] .header .header-title:not(.header-title.center)::before {
+  background-color: #ff2957 !important; /* 可调整为与深色主题搭配的色 */ 
+}
+
+/* 若你希望標題有更左側的文字間距，調整 .header .header-title padding-left 的值 */
+
+/* ===== Safety: 移除可能導致橢圓與凸出行為的 transform/animation 影響 ===== */
+.author .author-avatar-wrapper,
+.author .author-avatar,
+.header .header-title,
+.header .header-title::before {
+  transform: none !important;
+  transition: none !important;
+}
+/* ------------------ AVATAR HOVER RESTORE + SAFEGUARD (append to end of main.css) ------------------ */
+/* 目的：
+   - 強制 avatar 容器為正圓且不被父容器拉伸（避免橢圓）
+   - 恢復原本的「滑鼠碰到頭像時，頭像在圓圈內放大」效果（圈大小不變）
+   - 保留對 prefers-reduced-motion 的支援
+*/
+
+/* 基本固定圓形容器（確保 width == height）*/
+.author .author-avatar-wrapper {
+  --avatar-size: 70px; /* 需要時可改這個值（手機可以用 media query 覆蓋） */
+  width: var(--avatar-size) !important;
+  height: var(--avatar-size) !important;
+  min-width: var(--avatar-size) !important;
+  min-height: var(--avatar-size) !important;
+  max-width: var(--avatar-size) !important;
+  max-height: var(--avatar-size) !important;
+  flex: 0 0 var(--avatar-size) !important; /* 防止 flex 父容器拉伸 */
+  display: inline-block !important;
+  border-radius: 50% !important;
+  overflow: hidden !important; /* 讓內部圖片放大時被裁切在圓內 */
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  vertical-align: middle !important;
+  background-color: transparent !important;
+  transform: none !important; /* 確保容器不被 transform 拉扯成橢圓 */
+}
+
+/* 內部圖片填滿容器並且使用 object-fit 保持等比 */
+.author .author-avatar,
+.author .author-avatar-wrapper img,
+.author .author-avatar-wrapper picture > img,
+.author .author-avatar-wrapper svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  border-radius: 0 !important; /* 圓角由容器決定，避免雙重 radius 造成渲染差異 */
+  max-width: 100% !important;
+  max-height: 100% !important;
+  transform: none !important; /* 解除先前 global none 覆寫，讓 transition 正常被重新設定下面 */
+  transition: transform 420ms cubic-bezier(.2,.9,.2,1) !important;
+  will-change: transform !important;
+}
+
+/* Hover effect：放大內部圖片，但容器大小(圓形)保持不變 */
+.author .author-avatar-wrapper:hover .author-avatar,
+.author .author-avatar-wrapper:hover img,
+.author .author-avatar-wrapper:focus-within .author-avatar {
+  transform: scale(1.15) !important; /* 內部放大比例，可調整（如 1.2、1.12） */
+}
+
+/* focus 可見性（鍵盤操作時也有放大效果）*/
+.author .author-avatar-wrapper:focus-within {
+  outline: none !important;
+}
+.author .author-avatar-wrapper:focus-within .author-avatar {
+  transform: scale(1.08) !important;
+}
+
+/* 手機上頭像稍微縮小 */
+@media (max-width: 420px) {
+  .author .author-avatar-wrapper { --avatar-size: 56px !important; }
+}
+
+/* 支援減少動作偏好：關閉動畫與放大 */
+@media (prefers-reduced-motion: reduce) {
+  .author .author-avatar,
+  .author .author-avatar-wrapper:hover .author-avatar,
+  .author .author-avatar-wrapper:focus-within .author-avatar {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* 若先前有規則把 avatar 設為 auto 或設定了高度/寬度為百分比等，強制覆蓋 */
+.author img[style],
+.author .author-avatar[style] {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* ------------------ END AVATAR HOVER RESTORE ------------------ */
+/* ------------------ SMOOTH AVATAR HOVER IMPROVEMENT (append to end of main.css) ------------------ */
+/* 目的：讓先前的「圈內放大」效果更順暢、自然，同時保留對 reduced-motion 的支援 */
+
+/* 更平滑的動畫曲線與性能優化 */
+.author .author-avatar,
+.author .author-avatar-wrapper img,
+.author .author-avatar-wrapper picture > img,
+.author .author-avatar-wrapper svg {
+  /* 平滑的縮放過渡（只針對 transform）*/
+  transition: transform 420ms cubic-bezier(.22,.9,.26,1), filter 300ms ease, box-shadow 300ms ease !important;
+  transform-origin: center center !important;
+  will-change: transform, filter !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  -webkit-transform: translateZ(0) !important; /* 觸發 GPU 加速，減少掉幀 */
+}
+
+/* 保留容器為正圓、內部放大但不外溢 */
+.author .author-avatar-wrapper {
+  overflow: hidden !important; /* 確保放大時被裁切在圓內 */
+  -webkit-mask-image: -webkit-radial-gradient(white, black); /* 更穩定的圓形遮罩在某些瀏覽器 */
+}
+
+/* Hover / focus：輕柔放大並加 subtle glow（視覺回饋，但不誇張） */
+.author .author-avatar-wrapper:hover .author-avatar,
+.author .author-avatar-wrapper:focus-within .author-avatar,
+.author .author-avatar-wrapper:active .author-avatar {
+  transform: scale(1.14) !important;          /* 放大比例，可微調（1.08-1.2） */
+  filter: saturate(1.03) contrast(1.02) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08) inset !important; /* 內陰影，讓放大看起來在「圈內」 */
+}
+
+/* 在使用鍵盤 focus 時也給予同樣平滑效果 */
+.author .author-avatar-wrapper:focus-within {
+  outline: none !important;
+}
+
+/* 手機上以觸控為主，使用 active 來模擬 hover（避免 hover 導致持續放大） */
+@media (hover: none) and (pointer: coarse) {
+  .author .author-avatar-wrapper:hover .author-avatar { transform: none !important; }
+  .author .author-avatar-wrapper:active .author-avatar { transform: scale(1.08) !important; }
+}
+
+/* 尊重偏好：若使用者偏好減少動態，關閉動畫與放大 */
+@media (prefers-reduced-motion: reduce) {
+  .author .author-avatar,
+  .author .author-avatar-wrapper img,
+  .author .author-avatar-wrapper picture > img,
+  .author .author-avatar-wrapper svg {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    box-shadow: none !important;
+    will-change: auto !important;
+  }
+}
+
+/* 小調整：避免放大時圖片邊緣有鋸齒（可選） */
+.author .author-avatar-wrapper img {
+  image-rendering: optimizeQuality !important;
+}
