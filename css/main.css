@@ -4848,72 +4848,100 @@ html[data-theme="dark"] .header .header-title:not(.header-title.center)::before 
 @media (min-width: 769px) {
   .post-item .post-item-heading { gap: 6px !important; column-gap: 6px !important; }
 }
-/* ===== Smooth glass-wrapper hover (append to end of main.css) ===== */
+/* Minimal: only adjust post-item layout for desktop and mobile
+   - DO NOT change hover or glass-wrapper behavior
+   - Append this to the end of main.css */
 
-/* Base: smoother transitions and GPU hint (override earlier 'none' rules) */
-.glass-wrapper {
-  /* only transition the properties that are cheap and smooth */
-  transition: transform 520ms cubic-bezier(.22,.9,.26,1) !important,
-              box-shadow 520ms cubic-bezier(.22,.9,.26,1) !important,
-              backdrop-filter 520ms ease !important,
-              -webkit-backdrop-filter 520ms ease !important,
-              opacity 420ms ease !important;
-  will-change: transform, box-shadow, backdrop-filter, opacity !important;
-  -webkit-transform: translateZ(0); /* GPU promote */
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
+/* Force heading to be a compact flex row on desktop (override any grid) */
+.post-item .post-item-heading {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  column-gap: 8px !important;
+  flex-wrap: nowrap !important;
+  min-width: 0 !important; /* allow children to shrink */
+  box-sizing: border-box !important;
 }
 
-/* The inner content can also gently fade/shift so hover "appears" smoothly */
-.glass-wrapper .main-content,
-.glass-wrapper > * {
-  transition: opacity 480ms ease !important,
-              transform 480ms cubic-bezier(.22,.9,.26,1) !important;
-  will-change: opacity, transform !important;
-  opacity: 0.98 !important; /* slight base dim so hover feels like "light up" */
+/* Title: take remaining space, allow truncation on desktop */
+.post-item .post-item-heading .post-item-title {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-/* Hover state: gentle lift + slight scale + clearer blur + subtle opacity increase */
-.glass-wrapper:hover {
-  transform: translateY(-8px) scale(1.015) !important; /* small lift + subtle scale */
-  box-shadow: 0 18px 48px rgba(31,38,135,0.18) !important;
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  opacity: 1 !important;
+/* Categories: stay next to title (do not grow), compact spacing */
+.post-item .post-item-heading .post-item-categories {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: center !important;
+  white-space: nowrap !important;
 }
 
-/* Make inner content "light up" a bit */
-.glass-wrapper:hover .main-content,
-.glass-wrapper:hover > * {
-  transform: translateY(-4px) !important; /* small inner shift */
-  opacity: 1 !important;
+/* Ensure date column stays its width but doesn't push categories away */
+.post-item .post-item-date {
+  /* keep reasonable width on desktop; adjust if you want wider */
+  flex: 0 0 120px !important;
+  min-width: 120px !important;
+  width: 120px !important;
+  box-sizing: border-box !important;
+  padding-right: 12px !important;
 }
 
-/* Keep hover feedback subtle on desktop when pointer is coarse or on touch devices */
-@media (hover: none) and (pointer: coarse), (max-width: 420px) {
-  .glass-wrapper { transition-duration: 280ms !important; }
-  .glass-wrapper:hover { transform: none !important; box-shadow: 0 8px 20px rgba(0,0,0,0.06) !important; }
-  .glass-wrapper .main-content { transform: none !important; }
-}
+/* ---------------- Mobile: stack heading (title above categories), shrink date ---------------- */
+@media screen and (max-width: 768px) {
+  .post-item {
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
 
-/* Respect reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .glass-wrapper,
-  .glass-wrapper .main-content,
-  .glass-wrapper > * {
-    transition: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+  /* Make date narrower on mobile so title has more room */
+  .post-item .post-item-date {
+    flex: 0 0 88px !important;
+    min-width: 88px !important;
+    width: 88px !important;
+    padding-right: 8px !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+  }
+
+  /* Stack title and categories vertically to avoid overlap */
+  .post-item .post-item-heading {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: auto !important;
+  }
+
+  /* Allow title to wrap on small screens */
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  .post-item .post-item-categories {
+    white-space: normal !important;
+    margin-top: 4px !important;
+    gap: 6px !important;
   }
 }
 
-/* Safety: if any legacy rule used transform: translateY(...) on many elements,
-   ensure only the glass-wrapper/inner content animate to avoid layout shifts */
-.glass-wrapper *,
-.glass-wrapper *::before,
-.glass-wrapper *::after {
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
+/* Safety: keep transitions untouched (do not override hover rules) */
+.post-item,
+.post-item .post-item-heading,
+.post-item .post-item-date,
+.post-item .post-item-title,
+.post-item .post-item-categories {
+  /* do not set transition: all or change transform here — keep existing behavior */
+  box-sizing: border-box !important;
 }
