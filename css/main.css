@@ -4421,3 +4421,254 @@ html[data-theme="dark"] .header .header-title:not(.header-title.center)::before 
   .post-item .post-item-title a { white-space: normal !important; } /* allow wrap on very narrow screens */
   .post-item .post-item-categories { gap: 4px !important; }
 }
+/* ================= POST ITEM: align title & categories closer and same vertical height ================= */
+/* Append to end of main.css */
+
+/* Use CSS Grid inside the heading for reliable alignment across browsers */
+.post-item .post-item-heading {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important; /* title flexible, categories auto */
+  column-gap: 8px !important;     /* horizontal gap (smaller for tighter layout) */
+  row-gap: 6px !important;
+  align-items: center !important; /* vertical center of title block <-> categories */
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Title: allow shrink and stable line-height */
+.post-item .post-item-heading .post-item-title {
+  grid-column: 1 / 2 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;       /* critical to allow the title to shrink in grid */
+  line-height: 1.25 !important;
+  box-sizing: border-box !important;
+}
+
+/* Title link: single-line ellipsis on desktop so categories stay at same height */
+.post-item .post-item-title a {
+  display: inline-block !important;
+  white-space: nowrap !important;        /* keep one line on desktop */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+  vertical-align: middle !important;
+  padding-right: 6px !important;        /* tiny breathing room before categories */
+}
+
+/* Categories: fixed auto column, vertically centered */
+.post-item .post-item-heading .post-item-categories {
+  grid-column: 2 / 3 !important;
+  justify-self: start !important;
+  align-self: center !important;
+  display: flex !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+/* If categories are badges/links, keep them compact */
+.post-item .post-item-categories li {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+/* Responsive: on narrow viewports, place categories below title with a small gap */
+@media (max-width: 820px) {
+  .post-item .post-item-heading {
+    grid-template-columns: 1fr !important; /* single column */
+    align-items: start !important;
+  }
+  .post-item .post-item-heading .post-item-categories {
+    grid-column: 1 / -1 !important;       /* full width under title */
+    margin-top: 6px !important;
+    justify-self: start !important;
+    white-space: normal !important;       /* allow wrap if necessary on very small screens */
+    gap: 6px !important;
+  }
+  .post-item .post-item-title a {
+    white-space: normal !important;       /* allow wrapping on small screens */
+  }
+}
+
+/* Safety: ensure the date column doesn't vertically misalign the heading block */
+.post-item .post-item-date {
+  align-self: center !important;
+  box-sizing: border-box !important;
+}
+
+/* Small tweak if you want them even closer: reduce column-gap to 6px or 4px */
+/* .post-item .post-item-heading { column-gap: 6px !important; } */
+/* ------------------ POST-ITEM: widen date column & prevent hover from clipping title ------------------ */
+/* Append to end of main.css */
+
+/* 1) Make date column wider and stable (single-line) */
+.post-item .post-item-date {
+  flex: 0 0 120px !important;     /* fixed width column; adjust 120px -> 140px if you want wider */
+  min-width: 120px !important;
+  width: 120px !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important; /* keep date on one line */
+  overflow: visible !important;   /* allow date to be visible when effects occur */
+  text-align: left !important;
+  padding-right: 12px !important; /* breathing room between date and title */
+  z-index: 1 !important;
+  position: relative !important;
+}
+
+/* 2) Ensure the title sits above in stacking order and doesn't get visually cut */
+.post-item .post-item-title {
+  position: relative !important;
+  z-index: 2 !important;          /* keep title above date if overlap happens */
+  overflow: hidden !important;    /* keep ellipsis behavior */
+  white-space: nowrap !important; /* keep one-line title on desktop (responsive rules may allow wrap) */
+  text-overflow: ellipsis !important;
+  padding-left: 6px !important;   /* small inner spacing so title doesn't touch date visually */
+  box-sizing: border-box !important;
+}
+
+/* 3) Prevent parent hover from changing padding (which caused layout shift & clipping).
+   Keep a subtle move + shadow effect but do NOT change padding. */
+.post-item:hover {
+  /* smaller, safer translate; DO NOT add padding on hover */
+  transform: translateX(6px) !important; /* was 10px; reduced to avoid strong shifts */
+  padding-left: 0 !important;            /* override previous hover padding change */
+  padding-right: 0 !important;
+  border-radius: 8px !important;
+  /* optional subtle shadow to keep the hover feedback */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06) !important;
+}
+
+/* 4) If there are inner elements that had their own hover transforms,
+   prefer transforming an inner wrapper rather than the whole .post-item.
+   (If your template has an inner wrapper class for the item content,
+   you can use that instead to keep the date stable.) */
+/* Example if your markup had .post-item-inner:
+.post-item .post-item-inner { transition: transform 200ms ease; }
+.post-item:hover .post-item-inner { transform: translateX(6px); }
+*/
+
+/* 5) Ensure .post-item doesn't hide overflow so the title remains visible */
+.post-item {
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* 6) Responsive adjustments: on small screens allow title to wrap & date reduce */
+@media (max-width: 420px) {
+  .post-item .post-item-date {
+    flex: 0 0 88px !important;
+    min-width: 88px !important;
+    width: 88px !important;
+    white-space: nowrap !important;
+    padding-right: 8px !important;
+  }
+  .post-item .post-item-title,
+  .post-item .post-item-title a {
+    white-space: normal !important; /* allow wrapping on very small screens */
+    overflow: visible !important;
+  }
+  .post-item:hover { transform: translateX(3px) !important; } /* gentler on touch devices */
+}
+/* ------------------ Fix hover clipping & smooth animation for post-item ------------------ */
+/* Append to end of main.css */
+
+/* 1) Prevent date from scaling on hover (only color change) */
+.post-item .post-item-date {
+  transition: color 220ms ease, transform 180ms ease !important;
+  transform: none !important; /* ensure no scale from older rules */
+}
+.post-item:hover .post-item-date {
+  transform: none !important; /* absolutely cancel scale on hover */
+  color: #f66 !important;     /* keep color feedback */
+}
+
+/* 2) Do not transform the whole .post-item. Transform only the heading (inner content) */
+/* Create a smooth, GPU-accelerated movement for the heading */
+.post-item .post-item-heading {
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: transform 260ms cubic-bezier(.22,.9,.26,1), box-shadow 260ms cubic-bezier(.22,.9,.26,1);
+  /* ensure heading doesn't create its own overflow clipping */
+  overflow: visible !important;
+}
+
+/* On hover, nudge only the heading — gentle and isolated */
+.post-item:hover .post-item-heading {
+  transform: translateX(6px) !important; /* gentle shift */
+}
+
+/* 3) Remove transform & padding changes from .post-item hover to avoid layout shifts */
+.post-item {
+  transition: box-shadow 260ms cubic-bezier(.22,.9,.26,1) !important;
+  transform: none !important;
+  padding-left: 0 !important;   /* cancel any hover-caused padding shift */
+  padding-right: 0 !important;
+  overflow: visible !important;  /* allow inner elements to be visible during transforms */
+}
+.post-item:hover {
+  /* no translate on the parent, only shadow for feedback */
+  box-shadow: 0 10px 28px rgba(0,0,0,0.06) !important;
+  transform: none !important;
+}
+
+/* 4) Ensure title stays visually above date and isn't clipped when heading moves */
+.post-item .post-item-title {
+  position: relative !important;
+  z-index: 3 !important;             /* above date */
+  overflow: hidden !important;       /* keep ellipsis by default */
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  transition: color 200ms ease !important;
+}
+
+/* When heading moves, allow the title to be visible in case overlap would occur.
+   This only affects visual clipping during the hover animation and does not change layout. */
+.post-item:hover .post-item-title {
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+/* 5) Make the hover feel smoother: reduce conflicting transitions and use consistent easing */
+.post-item .post-item-title a {
+  transition: color 220ms cubic-bezier(.22,.9,.26,1), transform 220ms cubic-bezier(.22,.9,.26,1) !important;
+  will-change: transform, color;
+}
+
+/* 6) Safety: override any previous rules that use transition: all which make animation stiff */
+.post-item,
+.post-item .post-item-heading,
+.post-item .post-item-date,
+.post-item .post-item-title,
+.post-item .post-item-title a {
+  transition-property: transform, color, box-shadow !important;
+  transition-duration: 260ms !important;
+  transition-timing-function: cubic-bezier(.22,.9,.26,1) !important;
+}
+
+/* 7) Responsive gentle behavior: on touch devices make the movement even smaller */
+@media (hover: none) and (pointer: coarse), (max-width: 420px) {
+  .post-item:hover .post-item-heading { transform: translateX(3px) !important; }
+  .post-item { box-shadow: 0 6px 18px rgba(0,0,0,0.04) !important; }
+}
+
+/* 8) If some legacy rule still adds scale on hover specifically to date, forcibly cancel it */
+.post-item:hover .post-item-date,
+.post-item:active .post-item-date {
+  transform: none !important;
+}
+
+/* 9) Extra: keep overall animations lighter by avoiding large translateX on multiple elements */
+.post-item .post-item-heading,
+.archive-post-item,
+.friends-card,
+.category-item {
+  will-change: transform !important;
+}
