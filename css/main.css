@@ -13,18 +13,31 @@ html[data-theme=dark] body {
   color: #c7bebe;
 }
 
-/* New pseudo-element for the fixed background */
 body::before {
   content: '';
-  position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  z-index:-1;
-  pointer-events:none;
-  background: linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5));
+  position: fixed; /* ← 關鍵，讓它固定在視窗 */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100); /* ← 使用 --vh 避免 mobile 100vh 問題 */
+  background:
+    linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
+    url('/img/lime(7).png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1; /* ← 確保在內容後面 */
 }
+
 html[data-theme=dark] body::before {
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+  background:
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('/img/lime(7).png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
+
 
 
 /*----以上 在此处修改背景图片，可为明暗模式设置不同的背景图片----*/
@@ -5376,4 +5389,29 @@ html, body { overflow-x: hidden !important; }
     transform: none !important;
     box-shadow: none !important;
   }
+}
+
+body::before {
+  content: '';
+  position: fixed; /* ← 關鍵，讓它固定在視窗 */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100); /* ← 使用 --vh 避免 mobile 100vh 問題 */
+  background:
+    linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
+    url('/img/lime(18).png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1; /* ← 確保在內容後面 */
+}
+
+html[data-theme=dark] body::before {
+  background:
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url('/img/lime(18).png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
