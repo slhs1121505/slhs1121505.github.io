@@ -22,10 +22,10 @@ body::before {
   right: 0;
   bottom: 0;
   z-index: -1;
-  pointer-events: none; /* 避免攔截點擊 */
+  pointer-events: none;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
-    url('https://raw.githubusercontent.com/slhs1121505/slhs1121505/refs/heads/main/G1HuJgLaQAEJBTT.jpg');
+    linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
+    url('/img/lime({{ Math.floor(Math.random() * 24) }}).png');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -34,7 +34,7 @@ body::before {
 html[data-theme=dark] body::before {
   background: 
     linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-    url('https://raw.githubusercontent.com/slhs1121505/slhs1121505/refs/heads/main/G1HuJgLaQAEJBTT.jpg');
+    url('/img/lime({{ Math.floor(Math.random() * 24) }}).png');
     /* var(--background-img-dark); */
   background-position: center center;
   background-repeat: no-repeat;

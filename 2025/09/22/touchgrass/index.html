@@ -378,6 +378,35 @@
     </div>
   </small>
 </footer>
+<script>
+(function() {
+  const n = Math.floor(Math.random() * 24);
+  const bg = `/img/lime(${n}).png`;
+
+  // 找到 body::before（如果已經在 CSS 定義好了）
+  const style = document.createElement('style');
+  style.textContent = `
+    body::before {
+      background:
+        linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)),
+        url('${bg}');
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    html[data-theme=dark] body::before {
+      background:
+        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url('${bg}');
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+</script>
 
 <script>
 function fixVH() {
