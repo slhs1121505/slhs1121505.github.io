@@ -5415,3 +5415,6 @@ html[data-theme=dark] body::before {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.author-avatar-wrapper {
+  opacity: 1 !important;
+}
